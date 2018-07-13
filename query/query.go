@@ -1,4 +1,4 @@
-package db
+package query
 
 import (
 	"database/sql"
@@ -26,14 +26,14 @@ type Query struct {
 }
 
 // Constructor
-func NewQuery(db *sql.DB) (query *Query) {
+func New(db *sql.DB) (query *Query) {
 	query = new(Query)
 	query.Init(db)
 	return
 }
 
 // Constructor
-func NewQueryByValue(db *sql.DB) (query Query) {
+func NewByValue(db *sql.DB) (query Query) {
 	query.Init(db)
 	return
 }
