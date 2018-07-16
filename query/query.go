@@ -12,6 +12,7 @@ var Logger *log.Logger
 var Verbose bool
 
 type Query struct {
+	Result     sql.Result
 	Errors     []error
 	SQL        string
 	LogText    string
@@ -84,7 +85,8 @@ func (query *Query) Exec(args ...interface{}) {
 // Call query.Prepare first
 func (query *Query) ExecPrepared(args ...interface{}) {
 	if query.Ok() {
-		_, err := query.Stmt.Exec(args...)
+		var err error
+		query.Result, err = query.Stmt.Exec(args...)
 		query.logMethod("Stmt.Exec", err)
 	}
 }
