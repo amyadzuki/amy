@@ -32,7 +32,7 @@ func Simp(complex string) (simple string) {
 	slen := 0
 	for cidx := 0; cidx < clen; cidx++ {
 		codeunit := complex[cidx]
-		switch codeunit {
+		switch {
 		case codeunit >= 'A' && codeunit <= 'Z':
 			codeunit += 'a' - 'A'
 			fallthrough
