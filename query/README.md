@@ -1,15 +1,12 @@
 # query
-
 The `query` package is designed to save time when using databases.  It has only been tested with sqlite.
 
 ## Imports
-
 ```go
 import "github.com/amyadzuki/amy/query"
 ```
 
-## Usage Example
-
+## Usage Examples
 ```go
 package example
 
