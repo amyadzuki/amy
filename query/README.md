@@ -30,7 +30,7 @@ func MySQLQuery(key interface{}) (values []string, err error) {
 		var value string
 		q.ScanKeepOpen(&value)
 		if !q.Ok() {
-			err = q.Error
+			err = q.GetErrorDiscord()
 			// instead of the defer line, you can close it here
 			// q.Close()
 			return
