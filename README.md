@@ -7,5 +7,7 @@ go get -u github.com/amyadzuki/amy/...
 ```
 
 ## Imports
+```go
 import "github.com/amyadzuki/amy/query"
 import "github.com/amyadzuki/amy/str"
+```
