@@ -16,6 +16,8 @@ import (
 )
 
 func main() {
-	fmt.Printf("%v: \"%s\"\n", str.CaseHasPrefix("Hello, world!", "heLLo"), str.Simp("@Amy.Adzuki.1234!"))
+	match, tail := str.CaseHasPrefix("Hello, world!", "heLLo")
+	simp := str.Simp("@Amy.Adzuki.1234!")
+	fmt.Printf("%v: \"%s\"; \"%s\"\n", match, tail, simp)
 }
 ```
