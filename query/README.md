@@ -42,5 +42,3 @@ func MySQLQuery(key interface{}) (values []string, err error) {
 	return
 }
 ```
-
-
