@@ -227,6 +227,7 @@ func (query *Query) ScanKeepOpen(args ...interface{}) {
 
 func (query *Query) logMethod(method string, err error) {
 	if err != nil || query.verbose() {
+		wasOK := query.Ok()
 		if err != nil {
 			query.Errors = append(query.Errors, err)
 		}
@@ -243,9 +244,8 @@ func (query *Query) logMethod(method string, err error) {
 			query.LogText += err.Error()
 			query.LogText += "\""
 		}
-		if query.Ok() {
+		if wasOK {
 			query.LogText += " // stored"
-			query.Error = err
 		}
 	}
 }
