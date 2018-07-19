@@ -1,5 +1,5 @@
 # amy
-A free miscellaneous library for Google Go (golang)
+A [free](https://creativecommons.org/publicdomain/zero/1.0/) miscellaneous library for Google Go (golang)
 
 ## Installation
 
