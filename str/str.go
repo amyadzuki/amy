@@ -9,7 +9,7 @@ func CaseEqual(a, b string) bool {
 }
 
 func CaseHasPrefix(s, prefix string) (match bool, tail string) {
-	l = len(prefix)
+	l := len(prefix)
 	if len(s) < l {
 		return false, s
 	}
@@ -18,7 +18,7 @@ func CaseHasPrefix(s, prefix string) (match bool, tail string) {
 }
 
 func CaseHasSuffix(s, suffix string) (match bool, head string) {
-	l = len(suffix)
+	l := len(suffix)
 	if len(s) < l {
 		return false, s
 	}
