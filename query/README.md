@@ -26,6 +26,7 @@ func MySQLQuery(key interface{}) (values []string, err error) {
 	// or q := query.New(db)
 	// or q := query.Query{DB: db}
 	// or var q query.Query; q.Init(db)
+	defer q.Close() // or see below
 	q.SQL = `SELECT "value" FROM "Table" WHERE "key" = ?`
 	q.Query(key)
 	for q.NextOrClose() {
@@ -33,6 +34,8 @@ func MySQLQuery(key interface{}) (values []string, err error) {
 		q.ScanKeepOpen(&value)
 		if !q.Ok() {
 			err = q.Error
+			// instead of the defer line, you can close it here
+			// q.Close()
 			return
 		}
 		values = append(values, value)
