@@ -1,5 +1,7 @@
 # amy
-A [free](https://creativecommons.org/publicdomain/zero/1.0/) miscellaneous library for Google Go (golang)
+For [Amy](https://github.com/amyadzuki), by [Amy](https://github.com/amyadzuki); others, no touchy!
+
+A [free](https://creativecommons.org/publicdomain/zero/1.0/) miscellaneous library for Google Go (golang).
 
 ## Installation
 ```sh
