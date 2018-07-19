@@ -180,7 +180,7 @@ func (query *Query) PanicErrors() {
 // For use with query.ExecPrepared or query.QueryPrepared
 func (query *Query) Prepare() {
 	if query.Ok() {
-		query.LogSQL()
+		query.logSQL()
 		var err error
 		if query.Tx != nil {
 			query.Stmt, err = query.Tx.Prepare(query.SQL)
@@ -267,6 +267,6 @@ func (query *Query) logSQL() {
 	query.LogText += "\u200b\n```\n```go"
 }
 
-func (query *Query) verbose() {
+func (query *Query) verbose() bool {
 	return query.Verbose || Verbose
 }
