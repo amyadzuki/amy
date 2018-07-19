@@ -170,7 +170,7 @@ func (query *Query) Ok() bool {
 // Log the accumulated log text to the logger now if there was an error and panic if so
 // Example: query.PanicErrors()
 func (query *Query) PanicErrors() {
-	err = query.LastError()
+	err := query.LastError()
 	if err != nil {
 		query.LogNow()
 		panic(err)
