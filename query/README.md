@@ -37,6 +37,8 @@ func MySQLQuery(key interface{}) (values []string, err error) {
 		}
 		values = append(values, value)
 	}
+	// The rows have been closed so you can continue with more database
+	// operations here without it failing due to the database being locked
 	return
 }
 ```
