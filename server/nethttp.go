@@ -8,6 +8,8 @@ import (
 type NetHttpBackend struct {
 	ImplBody  func(...interface{}) []byte
 	ImplError func(int, string, ...interface{})
+	ImplHttp  func(int, interface{}) error
+	ImplHttps func(string, string, string, interface{}) error
 	ImplPath  func(...interface{}) string
 	ImplWrite func(string, ...interface{})
 }
