@@ -5,13 +5,16 @@ A [free](https://creativecommons.org/publicdomain/zero/1.0/) miscellaneous libra
 
 ## Installation
 ```sh
-go get -u github.com/amyadzuki/amy/...
+go get -u github.com/amyadzuki/amystuff/...
 ```
 
 ## Imports
 ```go
-import "github.com/amyadzuki/amy/query"
-import "github.com/amyadzuki/amy/str"
+import "github.com/amyadzuki/amystuff/client"
+import "github.com/amyadzuki/amystuff/onfail"
+import "github.com/amyadzuki/amystuff/query"
+import "github.com/amyadzuki/amystuff/server"
+import "github.com/amyadzuki/amystuff/str"
 ```
 
 ## Usage Examples
