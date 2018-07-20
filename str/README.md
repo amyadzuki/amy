@@ -16,9 +16,9 @@ import (
 )
 
 func main() {
-	match, tail := str.CaseHasPrefix("Hello, world!", "heLLo")
+	match, tail := str.CaseHasPrefix("Hello, World!", "heLLo")
 	simp := str.Simp("@Amy.Adzuki.1234!")
 	fmt.Printf("%v: \"%s\"; \"%s\"\n", match, tail, simp)
-	// Prints: `true: ", world!"; "amyadzuki1234"`
+	// Prints: `true: ", World!"; "amyadzuki1234"`
 }
 ```
