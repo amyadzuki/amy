@@ -1,34 +1,25 @@
 package onfail
 
-import (
-	"errors"
-	"log"
-)
+import "log"
 
-type Func func(string, error)
-
-func Fatal(note string, err error) {
-	log.Fatalln(convNoteErrToString(note, err))
+type OnFail interface {
+	Fail(error)
 }
 
-func Log(note string, err error) {
-	log.Println(convNoteErrToString(note, err))
+type OnFailCallFunction func(error)
+
+func (onFail OnFailCallFunction) Fail(err error) {
+	onFail(err)
 }
 
-func Panic(note string, err error) {
-	panic(convNoteErrToError(note, err))
+var Fatal OnFailCallFunction = func(err error) {
+	log.Fatalln(err)
 }
 
-func convNoteErrToError(note string, err error) error {
-	if len(note) < 1 {
-		return err
-	}
-	return errors.New(note + ":\t" + err.Error())
+var Panic OnFailCallFunction = func(err error) {
+	panic(err)
 }
 
-func convNoteErrToString(note string, err error) string {
-	if len(note) < 1 {
-		return err.Error()
-	}
-	return note + ":\t" + err.Error()
+var Print OnFailCallFunction = func(err error) {
+	log.Println(err)
 }
