@@ -51,7 +51,7 @@ func (impl *FastHttpBackend) Path(args ...interface{}) string {
 	if impl.ImplPath != nil {
 		return impl.ImplPath(args...)
 	} else {
-		return args[0].(*fasthttp.RequestCtx).Path()
+		return string (args[0].(*fasthttp.RequestCtx).Path())
 	}
 }
 
