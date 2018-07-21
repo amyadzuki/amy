@@ -1,12 +1,12 @@
 package server
 
 import (
-	"errors"
 	"strconv"
 	"strings"
 
 	"github.com/amyadzuki/amystuff/onfail"
 	"github.com/amyadzuki/amystuff/str"
+	"github.com/pkg/errors"
 )
 
 type Basic struct {
