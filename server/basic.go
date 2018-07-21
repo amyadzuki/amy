@@ -115,10 +115,12 @@ func basicHttpx(server Server, backend Backend, secure bool, args ...interface{}
 
 func basicServe(server Server, backend Backend, httpAddr, httpsAddr, certPath, keyPath string, onFail onfail.OnFail) {
 	go func() {
-		onFail.Fail("HTTP", backend.Http(httpAddr, server.Http))
+		err := backend.Http(httpAddr, server.Http)
+		onFail.Fail(errors.Wrap(err, "HTTP"))
 	}()
 	go func() {
-		onFail.Fail("HTTPS", backend.Https(httpsAddr, certPath, keyPath, server.Https))
+		err := backend.Https(httpsAddr, certPath, keyPath, server.Https)
+		onFail.Fail(errors.Wrap(err, "HTTPS"))
 	}()
 	return
 }
