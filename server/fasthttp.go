@@ -7,7 +7,7 @@ import (
 )
 
 type FastHttpBackend struct {
-	ImplBody  func(...interface{}) []byte
+	ImplBody  func(...interface{}) ([]byte, error)
 	ImplError func(int, string, ...interface{})
 	ImplHttp  func(string, interface{}) error
 	ImplHttps func(string, string, string, interface{}) error
@@ -15,12 +15,13 @@ type FastHttpBackend struct {
 	ImplWrite func(string, ...interface{})
 }
 
-func (impl *FastHttpBackend) Body(args ...interface{}) []byte {
+func (impl *FastHttpBackend) Body(args ...interface{}) (body []byte, err error) {
 	if impl.ImplBody != nil {
-		return impl.ImplBody(args...)
+		body, err = impl.ImplBody(args...)
 	} else {
-		return args[0].(*fasthttp.RequestCtx).PostBody()
+		body = args[0].(*fasthttp.RequestCtx).PostBody()
 	}
+	return
 }
 
 func (impl *FastHttpBackend) Error(status int, reason string, args ...interface{}) {
