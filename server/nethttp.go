@@ -25,7 +25,7 @@ func (impl *NetHttpBackend) Body(args ...interface{}) []byte {
 
 func (impl *NetHttpBackend) Error(status int, reason string, args ...interface{}) {
 	if impl.ImplError != nil {
-		impl.ImplError(reason, status, args...)
+		impl.ImplError(status, reason, args...)
 	} else {
 		http.Error(args[0].(http.ResponseWriter), reason, status)
 	}
