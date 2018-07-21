@@ -22,6 +22,23 @@ func main() {
 	cert := flag.String("cert", "cert.pem", "Path to TLS certificate file")
 	key := flag.String("key", "key.pem", "Path to TLS key file")
 	flag.Parse()
-	server.Serve(server.FastHttp, ":" + strconv.Itoa(*http), ":" + strconv.Itoa(*https), *cert, *key, onfail.Panic)
+	server.Default.ImplApi = api
+	server.Serve(
+		server.FastHttp,
+		":"+strconv.Itoa(*http),
+		":"+strconv.Itoa(*https),
+		*cert,
+		*key,
+		onfail.Panic,
+	)
+}
+
+func api(backend server.Backend, version uint32, args ...interface{}) {
+	switch version {
+	case 0x01000000:
+		backend.Error(501, "Not implemented", args...)
+	default:
+		backend.Error(404, "Not found", args...)
+	}
 }
 ```
