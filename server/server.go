@@ -1,6 +1,6 @@
 package server
 
-import "../../onfail/onfail"
+import "github.com/amyadzuki/amystuff/onfail"
 
 type Server interface {
 	Api(Backend, uint32, ...interface{})
