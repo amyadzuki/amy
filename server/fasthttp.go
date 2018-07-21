@@ -25,7 +25,7 @@ func (impl *FastHttpBackend) Body(args ...interface{}) []byte {
 
 func (impl *FastHttpBackend) Error(status int, reason string, args ...interface{}) {
 	if impl.ImplError != nil {
-		impl.ImplError(reason, status, args...)
+		impl.ImplError(status, reason, args...)
 	} else {
 		args[0].(*fasthttp.RequestCtx).Error(reason, status)
 	}
