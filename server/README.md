@@ -22,6 +22,6 @@ func main() {
 	cert := flag.String("cert", "cert.pem", "Path to TLS certificate file")
 	key := flag.String("key", "key.pem", "Path to TLS key file")
 	flag.Parse()
-	server.Default.Serve(server.FastHttp, ":" + strconv.Itoa(*http), ":" + strconv.Itoa(*https), *cert, *key, onfail.Panic)
+	server.Serve(server.FastHttp, ":" + strconv.Itoa(*http), ":" + strconv.Itoa(*https), *cert, *key, onfail.Panic)
 }
 ```
