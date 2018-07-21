@@ -35,7 +35,7 @@ func (impl *FastHttpBackend) Http(addr string, handler interface{}) error {
 	if impl.ImplHttp != nil {
 		return impl.ImplHttp(addr, handler)
 	} else {
-		return fasthttp.ListenAndServe(addr, handler.(fasthtttp.RequestHandler))
+		return fasthttp.ListenAndServe(addr, handler.(fasthttp.RequestHandler))
 	}
 }
 
