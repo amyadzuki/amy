@@ -2,8 +2,8 @@ package server
 
 import (
 	"strconv"
-	"../../onfail"
-	"../../str"
+	"../../onfail/onfail"
+	"../../str/str"
 )
 
 type Basic struct {
