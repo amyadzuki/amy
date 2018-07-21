@@ -14,6 +14,6 @@ func Https(backend Backend, args ...interface{}) {
 	Default.Https(backend, args...)
 }
 
-func Serve(backend Backend, httpAddr, httpsAddr, certPath, keyPath string, onFail onfail.Func) {
+func Serve(backend Backend, httpAddr, httpsAddr, certPath, keyPath string, onFail onfail.OnFail) {
 	Default.Serve(backend, httpAddr, httpsAddr, certPath, keyPath, onFail)
 }
