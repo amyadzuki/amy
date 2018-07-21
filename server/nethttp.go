@@ -2,12 +2,13 @@ package server
 
 import (
 	"fmt"
+	"ioutil"
 
 	"net/http"
 )
 
 type NetHttpBackend struct {
-	ImplBody  func(...interface{}) []byte
+	ImplBody  func(...interface{}) ([]byte, error)
 	ImplError func(int, string, ...interface{})
 	ImplHttp  func(string, interface{}) error
 	ImplHttps func(string, string, string, interface{}) error
@@ -15,12 +16,13 @@ type NetHttpBackend struct {
 	ImplWrite func(string, ...interface{})
 }
 
-func (impl *NetHttpBackend) Body(args ...interface{}) []byte {
+func (impl *NetHttpBackend) Body(args ...interface{}) (body []byte, err error) {
 	if impl.ImplBody != nil {
-		return impl.ImplBody(args...)
+		body, err = impl.ImplBody(args...)
 	} else {
-		return args[1].(*http.Request).Body
+		body, err = ioutil.ReadAll(args[1].(*http.Request).Body)
 	}
+	return
 }
 
 func (impl *NetHttpBackend) Error(status int, reason string, args ...interface{}) {
