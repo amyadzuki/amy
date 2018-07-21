@@ -7,9 +7,9 @@ import (
 )
 
 type Basic struct {
-	ImplApi   func(Backend, interface{}, uint32)
-	ImplHttp  func(Backend, interface{})
-	ImplHttps func(Backend, interface{})
+	ImplApi   func(Backend, uint32, ...interface{})
+	ImplHttp  func(Backend, ...interface{})
+	ImplHttps func(Backend, ...interface{})
 	ImplServe func(Backend, string, string, string, string, onfail.OnFail)
 }
 
