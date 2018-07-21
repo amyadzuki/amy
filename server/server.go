@@ -1,6 +1,6 @@
 package server
 
-import "../../onfail"
+import "../../onfail/onfail"
 
 type Server interface {
 	Api(Backend, uint32, ...interface{})
