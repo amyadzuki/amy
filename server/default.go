@@ -1,6 +1,6 @@
 package server
 
-import "../../onfail/onfail"
+import "github.com/amyadzuki/amystuff/onfail"
 
 func Api(backend Backend, version uint32, args ...interface{}) {
 	Default.Api(backend, version, args...)
