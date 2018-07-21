@@ -43,7 +43,7 @@ func (impl *FastHttpBackend) Https(addr, certPath, keyPath string, handler inter
 	if impl.ImplHttps != nil {
 		return impl.ImplHttps(addr, certPath, keyPath, handler)
 	} else {
-		return fasthttp.ListenAndServeTLS(addr, certPath, keyPath, handler.(fasthtttp.RequestHandler))
+		return fasthttp.ListenAndServeTLS(addr, certPath, keyPath, handler.(fasthttp.RequestHandler))
 	}
 }
 
