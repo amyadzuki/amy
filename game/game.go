@@ -165,6 +165,7 @@ func (game *Game) ToggleFullScreen() {
 	game.Win.SetFullScreen(!game.Win.FullScreen())
 }
 
+/*
 func (game *Game) VolumeChanged() {
 	if game.HaveAudio {
 		loud := game.Settings.MusVolume.Value()
@@ -176,6 +177,7 @@ func (game *Game) VolumeChanged() {
 		}
 	}
 }
+*/
 
 // Logging functions, in order of ascending importance
 
