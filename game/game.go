@@ -6,6 +6,7 @@ import (
 	"os"
 	"runtime"
 	"strconv"
+	"strings"
 
 	"github.com/amyadzuki/amystuff/logs"
 	"github.com/amyadzuki/amystuff/str"
