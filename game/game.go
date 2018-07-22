@@ -32,8 +32,9 @@ type Game struct {
 	Root  *gui.Root
 	Scene *core.Node
 
-	DebugInfo bool
-	TraceInfo bool
+	AudioAvailable bool
+	DebugInfo      bool
+	TraceInfo      bool
 }
 
 func New(title string) (game *Game) {
