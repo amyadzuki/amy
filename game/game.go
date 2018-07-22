@@ -13,6 +13,7 @@ import (
 	"github.com/amyadzuki/amystuff/str"
 
 	//	"github.com/g3n/engine/audio"
+	"github.com/g3n/engine/camera"
 	"github.com/g3n/engine/core"
 	"github.com/g3n/engine/gls"
 	"github.com/g3n/engine/gui"
@@ -22,8 +23,9 @@ import (
 )
 
 type Game struct {
-	Win window.IWindow
-	Wm  window.IWindowManager
+	camera camera.ICamera
+	Win    window.IWindow
+	Wm     window.IWindowManager
 
 	Title string
 
@@ -241,8 +243,8 @@ func (game *Game) onWinCh(evname string, ev interface{}) {
 		return
 	}
 	w, h := game.Win.Size()
-	if game.GS != nil {
-		game.GS.Viewport(0, 0, int32(w), int32(h))
+	if game.Gs != nil {
+		game.Gs.Viewport(0, 0, int32(w), int32(h))
 	} else {
 		game.Warn("onWinCh but game.GS was nil")
 	}
