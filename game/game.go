@@ -110,7 +110,7 @@ func (game *Game) StartUp(logPath string) (err error) {
 		wm = "glfw"
 	}
 
-	if game.WM, err = window.Manager(wm); err != nil {
+	if game.Wm, err = window.Manager(wm); err != nil {
 		game.Error("window.Manager")
 		return
 	}
@@ -129,8 +129,8 @@ func (game *Game) StartUp(logPath string) (err error) {
 	startupMessage += "\""
 	game.Info(startupMessage)
 
-	if game.Win, err = game.WM.CreateWindow(w, h, "Game", fs); err != nil {
-		game.Error("game.WM.CreateWindow")
+	if game.Win, err = game.Wm.CreateWindow(w, h, game.Title, fs); err != nil {
+		game.Error("game.Wm.CreateWindow")
 		return
 	}
 
