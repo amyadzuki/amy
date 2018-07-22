@@ -33,9 +33,11 @@ type Game struct {
 	Root  *gui.Root
 	Scene *core.Node
 
-	AudioAvailable bool
-	DebugInfo      bool
-	TraceInfo      bool
+	HaveAudio bool
+	InfoDebug bool
+	InfoTrace bool
+	MusicHush bool
+	MusicMute bool
 }
 
 func New(title string) (game *Game) {
@@ -75,8 +77,8 @@ func (game *Game) StartUp(logPath string) (err error) {
 	}()
 
 	info, debug, trace := !*flag_quiet, *flag_debug, *flag_trace
-	game.DebugInfo = debug || trace
-	game.TraceInfo = trace
+	game.InfoDebug = debug || trace
+	game.InfoTrace = trace
 	if game.Logs, err = logs.New(logPath, info, debug, trace); err != nil {
 		return
 	}
@@ -162,9 +164,9 @@ func (game *Game) ToggleFullScreen() {
 }
 
 func (game *Game) VolumeChanged() {
-	if game.AudioAvailable {
+	if game.HaveAudio {
 		loud := game.Settings.MusVolume.Value()
-		if game.HushMusic {
+		if game.MusicHush {
 			quiet := float32(float64(loud) * 0.5)
 			game.PlayerMusic.SetGain(quiet)
 		} else {
