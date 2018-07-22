@@ -23,7 +23,7 @@ import (
 )
 
 type Game struct {
-	camera camera.ICamera
+	Camera camera.ICamera
 	Win    window.IWindow
 	Wm     window.IWindowManager
 
