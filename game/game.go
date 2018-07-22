@@ -1,6 +1,8 @@
 package game
 
 import (
+	"flag"
+	"os"
 	"runtime"
 
 	"github.com/amyadzuki/amystuff/logs"
