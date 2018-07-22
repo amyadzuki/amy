@@ -5,11 +5,11 @@ import (
 
 	"github.com/amyadzuki/amystuff/str"
 
-	"github.com/g3n/engine/audio"
+//	"github.com/g3n/engine/audio"
 	"github.com/g3n/engine/core"
 	"github.com/g3n/engine/gls"
 	"github.com/g3n/engine/gui"
-	"github.com/g3n/engine/math32"
+//	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/renderer"
 	"github.com/g3n/engine/window"
 )
