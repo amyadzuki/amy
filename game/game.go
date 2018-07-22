@@ -3,6 +3,7 @@ package game
 import (
 	"runtime"
 
+	"github.com/amyadzuki/amystuff/logs"
 	"github.com/amyadzuki/amystuff/str"
 
 //	"github.com/g3n/engine/audio"
