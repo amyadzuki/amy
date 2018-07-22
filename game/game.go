@@ -139,7 +139,7 @@ func (game *Game) StartUp(logPath string) (err error) {
 	runtime.LockOSThread()
 
 	// Create the OpenGL state
-	if game.GS, err = gls.New(); err != nil {
+	if game.Gs, err = gls.New(); err != nil {
 		game.Error("gls.New")
 		return
 	}
