@@ -40,7 +40,7 @@ func Simp(complex string) (simple string) {
 			fallthrough
 		case codeunit >= '0' && codeunit <= '9':
 			fallthrough
-		case codeunit == '_' || codeunit == '-':
+		case codeunit == '-' || codeunit == '/' || codeunit == '_':
 			simp[slen] = codeunit
 			slen++
 		}
