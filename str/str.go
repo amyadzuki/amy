@@ -47,7 +47,3 @@ func Simp(complex string) (simple string) {
 	}
 	return string(simp[:slen])
 }
-
-func SimpEqual(a, b string) bool {
-	return Simp(a) == Simp(b)
-}
