@@ -22,7 +22,7 @@ type Game struct {
 	Title string
 
 	Gs    *gls.GLS
-	Logs  *Logs
+	Logs  *logs.Logs
 	Rend  *renderer.Renderer
 	Root  *gui.Root
 	Scene *core.Node
@@ -67,7 +67,7 @@ func (game *Game) StartUp(logPath string) (err error) {
 	info, debug, trace := !*flag_quiet, *flag_debug, *flag_trace
 	game.DebugInfo = debug || trace
 	game.TraceInfo = trace
-	if game.Logs, err = NewLogs(logPath, info, debug, trace); err != nil {
+	if game.Logs, err = logs.New(logPath, info, debug, trace); err != nil {
 		return
 	}
 
