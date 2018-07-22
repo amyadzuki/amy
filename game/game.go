@@ -10,11 +10,11 @@ import (
 	"github.com/amyadzuki/amystuff/logs"
 	"github.com/amyadzuki/amystuff/str"
 
-//	"github.com/g3n/engine/audio"
+	//	"github.com/g3n/engine/audio"
 	"github.com/g3n/engine/core"
 	"github.com/g3n/engine/gls"
 	"github.com/g3n/engine/gui"
-//	"github.com/g3n/engine/math32"
+	//	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/renderer"
 	"github.com/g3n/engine/window"
 )
@@ -30,6 +30,9 @@ type Game struct {
 	Rend  *renderer.Renderer
 	Root  *gui.Root
 	Scene *core.Node
+
+	DebugInfo bool
+	TraceInfo bool
 }
 
 func New(title string) (game *Game) {
