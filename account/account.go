@@ -2,7 +2,7 @@ package account
 
 import "fmt"
 
-type User interface {
+type Account interface {
 	HintLeft() string // Race and class, for example
 	HintRight() string // Level, for example
 	LogIn() error // Log in with the server
