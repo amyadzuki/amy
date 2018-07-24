@@ -34,6 +34,7 @@ type Game struct {
 	Rend  *renderer.Renderer
 	Root  *gui.Root
 	Scene *core.Node
+	W, H  int
 
 	HaveAudio bool
 	InfoDebug bool
@@ -46,6 +47,12 @@ func New(title string) (game *Game) {
 	game = new(Game)
 	game.Title = title
 	game.Scene = core.NewNode()
+	return
+}
+
+func (game *Game) Size() (w, h int) {
+	w, h = game.Win.Size()
+	game.W, game.H = w, h
 	return
 }
 
@@ -173,7 +180,7 @@ func (game *Game) ToggleFullScreen() {
 }
 
 func (game *Game) ViewportFull() (w, h int) {
-	w, h = game.Win.Size()
+	w, h = game.Size()
 	game.Gs.Viewport(0, 0, int32(w), int32(h))
 	return
 }
@@ -257,7 +264,7 @@ func (game *Game) onWinCh(evname string, ev interface{}) {
 		game.Warn("onWinCh but game.Win was nil")
 		return
 	}
-	w, h := game.Win.Size()
+	w, h := game.Size()
 	if game.Gs != nil {
 		game.Gs.Viewport(0, 0, int32(w), int32(h))
 	} else {
