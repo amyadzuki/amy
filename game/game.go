@@ -139,8 +139,22 @@ func (game *Game) Quit() {
 }
 
 func (game *Game) RecalcDocks() {
+	w, h := game.Size()
+	if game.DockTopLeft != nil {
+		game.DockTopLeft.SetPosition(0, 0)
+	}
 	if game.DockTopRight != nil {
-		game.DockTopRight.SetPosition(100, 100)
+		x := w - game.DockTopRight.TotalWidth()
+		game.DockTopRight.SetPosition(x, 0)
+	}
+	if game.DockBotLeft != nil {
+		y := h - game.DockBotLeft.TotalHeight()
+		game.DockBotLeft.SetPosition(0, y)
+	}
+	if game.DockBotRight != nil {
+		x := w - game.DockBotRight.TotalWidth()
+		y := h - game.DockBotRight.TotalHeight()
+		game.DockBotRight.SetPosition(x, y)
 	}
 }
 
