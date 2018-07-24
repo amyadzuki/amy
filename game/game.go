@@ -404,6 +404,7 @@ func (game *Game) onWinCh(evname string, ev interface{}) {
 	} else {
 		game.Warn("onWinCh but game.Root was nil")
 	}
+	game.RecalcDocks()
 	if game.Camera != nil {
 		game.Camera.SetAspect(float32(float64(w) / float64(h)))
 	} else {
