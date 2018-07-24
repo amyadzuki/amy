@@ -186,7 +186,7 @@ func (game *Game) ToggleFullScreen() {
 }
 
 func (game *Game) ViewportFull() {
-	w, h = game.Size()
+	w, h := game.Size()
 	game.Gs.Viewport(0, 0, int32(w), int32(h))
 	return
 }
