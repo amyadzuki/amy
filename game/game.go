@@ -23,7 +23,7 @@ import (
 )
 
 type Game struct {
-	Camera camera.ICamera
+	Camera *camera.Perspective // camera.ICamera if my PR gets accepted
 	Win    window.IWindow
 	Wm     window.IWindowManager
 
