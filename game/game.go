@@ -198,6 +198,7 @@ func (game *Game) StartUp(logPath string) (err error) {
 
 func (game *Game) ToggleFullScreen() {
 	game.Win.SetFullScreen(!game.Win.FullScreen())
+	game.onWinch("", nil)
 }
 
 func (game *Game) ViewportFull() {
