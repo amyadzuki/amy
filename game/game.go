@@ -65,7 +65,7 @@ func New(title string) (game *Game) {
 }
 
 func (game *Game) AddDockTopRight() {
-	game.DockTopRight = gui.NewPanel(50, 50)
+	game.DockTopRight = gui.NewPanel(0, 0)
 	game.DockTopRight.SetLayout(gui.NewDockLayout())
 	game.Root.Add(game.DockTopRight)
 }
@@ -91,6 +91,7 @@ func (game *Game) AddWidgetClose(label string) {
 			game.WidgetClose.SetStyles(&styles.CloseButton)
 		}()
 	})
+	game.dockSize(game.DockTopRight, game.WidgetClose)
 	game.DockTopRight.Add(game.WidgetClose)
 }
 
@@ -103,6 +104,7 @@ func (game *Game) AddWidgetFullScreen(label string) {
 	game.WidgetFullScreen.Subscribe(gui.OnClick, func(name string, ev interface{}) {
 		game.ToggleFullScreen()
 	})
+	game.dockSize(game.DockTopRight, game.WidgetFullScreen)
 	game.DockTopRight.Add(game.WidgetFullScreen)
 }
 
@@ -115,6 +117,7 @@ func (game *Game) AddWidgetHelp(label string) {
 	game.WidgetHelp.Subscribe(gui.OnClick, func(name string, ev interface{}) {
 		game.WantHelp = !game.WantHelp
 	})
+	game.dockSize(game.DockTopRight, game.WidgetHelp)
 	game.DockTopRight.Add(game.WidgetHelp)
 }
 
@@ -127,6 +130,7 @@ func (game *Game) AddWidgetIconify(label string) {
 	game.WidgetIconify.Subscribe(gui.OnClick, func(name string, ev interface{}) {
 		// TODO
 	})
+	game.dockSize(game.DockTopRight, game.WidgetIconify)
 	game.DockTopRight.Add(game.WidgetIconify)
 }
 
@@ -374,6 +378,16 @@ func (game *Game) Fatal(v ...interface{}) {
 }
 
 // Internal functions
+
+func (game *Game) dockSize(p *gui.Panel, w gui.IPanel) {
+	oldW, oldH := p.TotalWidth(), p.TotalHeight()
+	newW, newH := oldW + w.TotalWidth(), w.TotalHeight()
+	if oldH > newH {
+		newH = oldH
+	}
+	p.SetWidth(newW)
+	p.SetHeight(newH)
+}
 
 func (game *Game) onKeyboardKey(evname string, ev interface{}) {
 	kev := ev.(*window.KeyEvent)
