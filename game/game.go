@@ -34,17 +34,18 @@ type Game struct {
 	DockTopLeft  *gui.Panel
 	DockTopRight *gui.Panel
 
-	LabelAccount    string
-	LabelFullScreen string
-	LabelWindow     string
-	Title           string
+	LabelCharaChangerBlank string
+	LabelFullScreen        string
+	LabelWindow            string
+	Title                  string
 
-	WidgetClose      *gui.Button
-	WidgetFullScreen *gui.Button
-	WidgetHelp       *gui.Button
-	WidgetIconify    *gui.Button
-	WidgetFps        [2]*gui.Label
-	WidgetPing       [2]*gui.Label
+	WidgetCharaChanger *gui.Button
+	WidgetClose        *gui.Button
+	WidgetFullScreen   *gui.Button
+	WidgetHelp         *gui.Button
+	WidgetIconify      *gui.Button
+	WidgetFps          [2]*gui.Label
+	WidgetPing         [2]*gui.Label
 
 	MaxWidthFps  float64
 	MaxWidthPing float64
@@ -81,17 +82,17 @@ func (game *Game) AddDockTopRight() {
 	game.Root.Add(game.DockTopRight)
 }
 
-func (game *Game) AddWidgetAccount(label string) {
+func (game *Game) AddWidgetCharaChanger(label string) {
 	if game.DockTopLeft == nil {
 		game.AddDockTopLeft()
 	}
-	game.LabelAccount = label
-	game.WidgetAccount = gui.NewButton(label)
-	game.WidgetAccount.SetLayoutParams(&gui.DockLayoutParams{gui.DockLeft})
-	game.WidgetAccount.Subscribe(gui.OnClick, func(name string, ev interface{}) {
+	game.LabelCharaChangerBlank = label
+	game.WidgetCharaChanger = gui.NewButton(label)
+	game.WidgetCharaChanger.SetLayoutParams(&gui.DockLayoutParams{gui.DockLeft})
+	game.WidgetCharaChanger.Subscribe(gui.OnClick, func(name string, ev interface{}) {
 		//
 	})
-	game.DockTopLeft.Add(game.WidgetAccount)
+	game.DockTopLeft.Add(game.WidgetCharaChanger)
 }
 
 func (game *Game) AddWidgetClose(label string) {
