@@ -135,12 +135,7 @@ func (game *Game) AddWidgetClose(label string) {
 }
 
 func (game *Game) AddWidgetFps() {
-	game.WidgetFps[0] = gui.NewLabel("9999")
-	game.MaxWidthFps = float64(game.WidgetFps[0].TotalWidth())
-	game.WidgetFps[0].SetText("")
-	game.WidgetFps[1] = gui.NewLabel(" fps")
-	game.Root.Add(game.WidgetFps[0])
-	game.Root.Add(game.WidgetFps[1])
+	AddWidgetPerformance(game.WidgetFps, &game.MaxWidthFps, 999999, " fps  ")
 }
 
 func (game *Game) AddWidgetFullScreen(labelFullScreen, labelWindow string) {
@@ -198,13 +193,22 @@ func (game *Game) AddWidgetIconify(label string) {
 	game.DockTop.Add(game.WidgetIconify)
 }
 
+func (game *Game) AddWidgetPerformance(w [2]*gui.Label, wid *float64, large int, label string) {
+	if game.DockTop == nil {
+		game.AddDockTop()
+	}
+	w[0] = gui.NewLabel(strconv.Itoa(large))
+	*wid = float64(w[0].TotalWidth())
+	w[0].SetText("")
+	w[1] = gui.NewLabel(label)
+	w[0].SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
+	w[1].SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
+	game.DockTop.Add(w[1])
+	game.DockTop.Add(w[0])
+}
+
 func (game *Game) AddWidgetPing() {
-	game.WidgetPing[0] = gui.NewLabel("9999")
-	game.MaxWidthPing = float64(game.WidgetPing[0].TotalWidth())
-	game.WidgetPing[0].SetText("")
-	game.WidgetPing[1] = gui.NewLabel(" ms")
-	game.Root.Add(game.WidgetPing[0])
-	game.Root.Add(game.WidgetPing[1])
+	AddWidgetPerformance(game.WidgetPing, &game.MaxWidthPing, 999999, " ms  ")
 }
 
 func (game *Game) FullScreen() bool {
