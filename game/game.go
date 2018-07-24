@@ -8,9 +8,11 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/amyadzuki/amystuff/logs"
 	"github.com/amyadzuki/amystuff/str"
+	"github.com/amyadzuki/amystuff/styles"
 
 	//	"github.com/g3n/engine/audio"
 	"github.com/g3n/engine/camera"
@@ -27,7 +29,17 @@ type Game struct {
 	Win    window.IWindow
 	Wm     window.IWindowManager
 
+	DockBotLeft  gui.IPanel
+	DockBotRight gui.IPanel
+	DockTopLeft  gui.IPanel
+	DockTopRight gui.IPanel
+
 	Title string
+
+	WidgetClose      *gui.Button
+	WidgetFullScreen *gui.Button
+	WidgetHelp       *gui.Button
+	WidgetIconify    *gui.Button
 
 	Gs    *gls.GLS
 	Logs  *logs.Logs
@@ -37,6 +49,7 @@ type Game struct {
 	w, h  int
 
 	AskQuit   int8
+	WantHelp  bool
 	HaveAudio bool
 	InfoDebug bool
 	InfoTrace bool
@@ -51,12 +64,84 @@ func New(title string) (game *Game) {
 	return
 }
 
+func (game *Game) AddDockTopRight() {
+	game.DockTopRight := gui.NewPanel(50, 50)
+	game.DockTopRight.SetLayout(gui.NewDockLayout())
+	game.Root.Add(game.DockTopRight)
+}
+
+func (game *Game) AddWidgetClose(label string) {
+	if game.DockTopRight == nil {
+		game.AddDockTopRight()
+	}
+	game.WidgetClose = gui.NewButton(label)
+	game.WidgetClose.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
+	game.WidgetClose.SetStyles(&styles.CloseButton)
+	game.WidgetClose.Subscribe(gui.OnClick, func(name string, ev interface{}) {
+		game.WidgetClose.SetStyles(&styles.ClosingButton)
+		if game.SoftQuit() > 0 {
+			game.Quit()
+		}
+		go func() {
+			time.Sleep(time.Second)
+			game.AskQuit--
+			if game.AskQuit < 0 {
+				game.AskQuit = 0
+			}
+			game.WidgetClose.SetStyles(&styles.CloseButton)
+		}()
+	})
+	game.DockTopRight.Add(game.WidgetClose)
+}
+
+func (game *Game) AddWidgetFullScreen(label string) {
+	if game.DockTopRight == nil {
+		game.AddDockTopRight()
+	}
+	game.WidgetFullScreen = gui.NewButton(label)
+	game.WidgetFullScreen.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
+	game.WidgetFullScreen.Subscribe(gui.OnClick, func(name string, ev interface{}) {
+		game.ToggleFullScreen()
+	})
+	game.DockTopRight.Add(game.WidgetFullScreen)
+}
+
+func (game *Game) AddWidgetHelp(label string) {
+	if game.DockTopRight == nil {
+		game.AddDockTopRight()
+	}
+	game.WidgetHelp = gui.NewButton(label)
+	game.WidgetHelp.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
+	game.WidgetHelp.Subscribe(gui.OnClick, func(name string, ev interface{}) {
+		game.WantHelp = !game.WantHelp
+	})
+	game.DockTopRight.Add(game.WidgetHelp)
+}
+
+func (game *Game) AddWidgetIconify(label string) {
+	if game.DockTopRight == nil {
+		game.AddDockTopRight()
+	}
+	game.WidgetIconify = gui.NewButton(label)
+	game.WidgetIconify.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
+	game.WidgetIconify.Subscribe(gui.OnClick, func(name string, ev interface{}) {
+		// TODO
+	})
+	game.DockTopRight.Add(game.WidgetIconify)
+}
+
 func (game *Game) FullScreen() bool {
 	return game.Win.FullScreen()
 }
 
 func (game *Game) Quit() {
 	game.Win.SetShouldClose(true)
+}
+
+func (game *Game) RecalcDocks() {
+	if game.DockTopRight != nil {
+		game.DockTopRight.SetPosition(100, 100)
+	}
 }
 
 func (game *Game) SetFullScreen(fullScreen bool) {
