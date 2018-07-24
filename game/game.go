@@ -36,7 +36,7 @@ type Game struct {
 	Scene *core.Node
 	w, h  int
 
-	AskQuit   bool
+	AskQuit   int8
 	HaveAudio bool
 	InfoDebug bool
 	InfoTrace bool
@@ -51,6 +51,10 @@ func New(title string) (game *Game) {
 	return
 }
 
+func (game *Game) Quit() {
+	game.Win.SetShouldClose(true)
+}
+
 func (game *Game) Size() (w, h int) {
 	w, h = game.w, game.h
 	return
@@ -62,13 +66,14 @@ func (game *Game) SizeRecalc() (w, h int) {
 	return
 }
 
-func (game *Game) SoftQuit() {
-	if !game.AskQuit {
-		game.AskQuit = true
-		return
+func (game *Game) SoftQuit() int8 {
+	was := game.AskQuit
+	now := int(was) + 1
+	if now > 127 {
+		now = 127
 	}
-	game.Win.SetShouldClose(true)
-	return
+	game.AskQuit = int8(now)
+	return was
 }
 
 func (game *Game) StartUp(logPath string) (err error) {
