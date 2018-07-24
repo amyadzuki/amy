@@ -45,8 +45,8 @@ type Game struct {
 
 	WidgetIntsAddrs   [4]*int
 	WidgetIntsFmts    [4]string
-	WidgetIntsUnits   [4]*gui.Button
-	WidgetIntsWidgets [4]*gui.Button
+	WidgetIntsUnits   [4]*gui.Label
+	WidgetIntsWidgets [4]*gui.Label
 
 	Gs    *gls.GLS
 	Logs  *logs.Logs
