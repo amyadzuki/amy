@@ -67,7 +67,7 @@ func (game *Game) SoftQuit() {
 		game.AskQuit = true
 		return
 	}
-	game.Win.SetShouldQuit(true)
+	game.Win.SetShouldClose(true)
 	return
 }
 
