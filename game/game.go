@@ -151,6 +151,8 @@ func (game *Game) StartUp(logPath string) (err error) {
 		return
 	}
 
+	game.Root = gui.NewRoot(game.Gs, game.Win)
+
 	game.Win.Subscribe(window.OnWindowSize, game.onWinCh)
 	game.Win.Subscribe(window.OnKeyDown, game.onKeyboardKey)
 	game.Win.Subscribe(window.OnKeyUp, game.onKeyboardKey)
@@ -163,6 +165,12 @@ func (game *Game) StartUp(logPath string) (err error) {
 
 func (game *Game) ToggleFullScreen() {
 	game.Win.SetFullScreen(!game.Win.FullScreen())
+}
+
+func (game *Game) ViewportFull() (w, h int) {
+	w, h = game.Win.Size()
+	game.Gs.Viewport(0, 0, int32(w), int32(h))
+	return
 }
 
 /*
