@@ -151,7 +151,12 @@ func (game *Game) StartUp(logPath string) (err error) {
 		return
 	}
 
+	w, h := game.ViewportFull()
+	aspect := float32(float64(w) / float64(h))
+	game.Camera = camera.NewPerspective(65, aspect, 1.0/128.0, 1024.0)
+
 	game.Root = gui.NewRoot(game.Gs, game.Win)
+	game.Root.SetSize(float32(w), float32(h))
 
 	game.Win.Subscribe(window.OnWindowSize, game.onWinCh)
 	game.Win.Subscribe(window.OnKeyDown, game.onKeyboardKey)
