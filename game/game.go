@@ -61,6 +61,15 @@ func (game *Game) SizeRecalc() (w, h int) {
 	return
 }
 
+func (game *Game) SoftQuit() {
+	if !game.AskQuit {
+		game.AskQuit = true
+		return
+	}
+	game.Win.SetShouldQuit(true)
+	return
+}
+
 func (game *Game) StartUp(logPath string) (err error) {
 	flag_debug := CommandLine.Bool("debug", false,
 		"Log debug info (may slightly slow the game)")
