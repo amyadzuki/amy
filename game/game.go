@@ -34,7 +34,7 @@ type Game struct {
 	Rend  *renderer.Renderer
 	Root  *gui.Root
 	Scene *core.Node
-	W, H  int
+	w, h  int
 
 	HaveAudio bool
 	InfoDebug bool
@@ -51,8 +51,13 @@ func New(title string) (game *Game) {
 }
 
 func (game *Game) Size() (w, h int) {
+	w, h = game.w, game.h
+	return
+}
+
+func (game *Game) SizeRecalc() (w, h int) {
 	w, h = game.Win.Size()
-	game.W, game.H = w, h
+	game.w, game.h = w, h
 	return
 }
 
@@ -158,7 +163,8 @@ func (game *Game) StartUp(logPath string) (err error) {
 		return
 	}
 
-	width, height := game.ViewportFull()
+	width, height := game.SizeRecalc()
+	game.ViewportFull()
 	aspect := float32(float64(width) / float64(height))
 	game.Camera = camera.NewPerspective(65, aspect, 1.0/128.0, 1024.0)
 
@@ -179,7 +185,7 @@ func (game *Game) ToggleFullScreen() {
 	game.Win.SetFullScreen(!game.Win.FullScreen())
 }
 
-func (game *Game) ViewportFull() (w, h int) {
+func (game *Game) ViewportFull() {
 	w, h = game.Size()
 	game.Gs.Viewport(0, 0, int32(w), int32(h))
 	return
@@ -264,7 +270,7 @@ func (game *Game) onWinCh(evname string, ev interface{}) {
 		game.Warn("onWinCh but game.Win was nil")
 		return
 	}
-	w, h := game.Size()
+	w, h := game.SizeRecalc()
 	if game.Gs != nil {
 		game.Gs.Viewport(0, 0, int32(w), int32(h))
 	} else {
