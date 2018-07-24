@@ -140,20 +140,21 @@ func (game *Game) Quit() {
 
 func (game *Game) RecalcDocks() {
 	w, h := game.Size()
+	w64, h64 := float64(w), float64(h)
 	if game.DockTopLeft != nil {
 		game.DockTopLeft.SetPosition(0, 0)
 	}
 	if game.DockTopRight != nil {
-		x := w - game.DockTopRight.TotalWidth()
+		x := float32(w64 - float64(game.DockTopRight.TotalWidth()))
 		game.DockTopRight.SetPosition(x, 0)
 	}
 	if game.DockBotLeft != nil {
-		y := h - game.DockBotLeft.TotalHeight()
+		y := float32(h64 - float64(game.DockBotLeft.TotalHeight()))
 		game.DockBotLeft.SetPosition(0, y)
 	}
 	if game.DockBotRight != nil {
-		x := w - game.DockBotRight.TotalWidth()
-		y := h - game.DockBotRight.TotalHeight()
+		x := float32(w64 - float64(game.DockBotRight.TotalWidth()))
+		y := float32(h64 - float64(game.DockBotRight.TotalHeight()))
 		game.DockBotRight.SetPosition(x, y)
 	}
 }
