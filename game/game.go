@@ -45,13 +45,6 @@ type Game struct {
 	WidgetFps        [2]*gui.Label
 	WidgetPing       [2]*gui.Label
 
-/*
-	WidgetIntsAddrs   [4]*int
-	WidgetIntsFmts    [4]string
-	WidgetIntsUnits   [4]*gui.Label
-	WidgetIntsWidgets [4]*gui.Label
-*/
-
 	MaxWidthFps  float64
 	MaxWidthPing float64
 
@@ -164,22 +157,6 @@ func (game *Game) AddWidgetIconify(label string) {
 	})
 	game.dockSize(game.DockTopRight, game.WidgetIconify)
 	game.DockTopRight.Add(game.WidgetIconify)
-}
-
-func (game *Game) AddWidgetInt(id int, format string, addr *int, large int, units string) {
-	if game.DockTopRight == nil {
-		game.AddDockTopRight()
-	}
-	game.WidgetIntsUnits[id] = gui.NewLabel(units)
-	game.dockSize(game.DockTopRight, game.WidgetIntsUnits[id])
-	game.DockTopRight.Add(game.WidgetIntsUnits[id])
-	example := fmt.Sprintf(format, large) // for width
-	game.WidgetIntsAddrs[id] = addr
-	game.WidgetIntsFmts[id] = format
-	game.WidgetIntsWidgets[id] = gui.NewLabel(example)
-	game.WidgetIntsWidgets[id].SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
-	game.dockSize(game.DockTopRight, game.WidgetIntsWidgets[id])
-	game.DockTopRight.Add(game.WidgetIntsWidgets[id])
 }
 
 func (game *Game) AddWidgetPing() {
