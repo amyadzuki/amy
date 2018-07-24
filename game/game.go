@@ -135,7 +135,7 @@ func (game *Game) AddWidgetClose(label string) {
 }
 
 func (game *Game) AddWidgetFps() {
-	AddWidgetPerformance(game.WidgetFps, &game.MaxWidthFps, 999999, " fps  ")
+	game.AddWidgetPerformance(game.WidgetFps, &game.MaxWidthFps, 999999, " fps  ")
 }
 
 func (game *Game) AddWidgetFullScreen(labelFullScreen, labelWindow string) {
@@ -208,7 +208,7 @@ func (game *Game) AddWidgetPerformance(w [2]*gui.Label, wid *float64, large int,
 }
 
 func (game *Game) AddWidgetPing() {
-	AddWidgetPerformance(game.WidgetPing, &game.MaxWidthPing, 999999, " ms  ")
+	game.AddWidgetPerformance(game.WidgetPing, &game.MaxWidthPing, 999999, " ms  ")
 }
 
 func (game *Game) FullScreen() bool {
