@@ -76,6 +76,24 @@ func New(title string) (game *Game) {
 	return
 }
 
+func (game *Game) AddDockBotLeft() {
+	game.DockBotLeft = gui.NewPanel(0, 0)
+	game.DockBotLeft.SetLayout(gui.NewDockLayout())
+	game.Root.Add(game.DockBotLeft)
+}
+
+func (game *Game) AddDockBotRight() {
+	game.DockBotRight = gui.NewPanel(0, 0)
+	game.DockBotRight.SetLayout(gui.NewDockLayout())
+	game.Root.Add(game.DockBotRight)
+}
+
+func (game *Game) AddDockTopLeft() {
+	game.DockTopLeft = gui.NewPanel(0, 0)
+	game.DockTopLeft.SetLayout(gui.NewDockLayout())
+	game.Root.Add(game.DockTopLeft)
+}
+
 func (game *Game) AddDockTopRight() {
 	game.DockTopRight = gui.NewPanel(0, 0)
 	game.DockTopRight.SetLayout(gui.NewDockLayout())
