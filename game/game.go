@@ -43,6 +43,7 @@ type Game struct {
 	WidgetClose        *gui.Button
 	WidgetFullScreen   *gui.Button
 	WidgetHelp         *gui.Button
+	WidgetHint         *gui.Label
 	WidgetIconify      *gui.Button
 	WidgetFps          [2]*gui.Label
 	WidgetPing         [2]*gui.Label
@@ -110,6 +111,7 @@ func (game *Game) AddWidgetCharaChanger(label string) {
 	game.WidgetCharaChanger.Subscribe(gui.OnClick, func(name string, ev interface{}) {
 		//
 	})
+	game.addDockSize(game.DockTopLeft, game.WidgetCharaChanger)
 	game.DockTopLeft.Add(game.WidgetCharaChanger)
 }
 
@@ -134,7 +136,7 @@ func (game *Game) AddWidgetClose(label string) {
 			game.WidgetClose.SetStyles(&styles.CloseButton)
 		}()
 	})
-	game.dockSize(game.DockTopRight, game.WidgetClose)
+	game.addDockSize(game.DockTopRight, game.WidgetClose)
 	game.DockTopRight.Add(game.WidgetClose)
 }
 
@@ -162,7 +164,7 @@ func (game *Game) AddWidgetFullScreen(labelFullScreen, labelWindow string) {
 	game.WidgetFullScreen.Subscribe(gui.OnClick, func(name string, ev interface{}) {
 		game.ToggleFullScreen()
 	})
-	game.dockSize(game.DockTopRight, game.WidgetFullScreen)
+	game.addDockSize(game.DockTopRight, game.WidgetFullScreen)
 	game.DockTopRight.Add(game.WidgetFullScreen)
 }
 
@@ -175,8 +177,18 @@ func (game *Game) AddWidgetHelp(label string) {
 	game.WidgetHelp.Subscribe(gui.OnClick, func(name string, ev interface{}) {
 		game.WantHelp = !game.WantHelp
 	})
-	game.dockSize(game.DockTopRight, game.WidgetHelp)
+	game.addDockSize(game.DockTopRight, game.WidgetHelp)
 	game.DockTopRight.Add(game.WidgetHelp)
+}
+
+func (game *Game) AddWidgetHint(label string) {
+	if game.DockTopLeft == nil {
+		game.AddDockTopLeft()
+	}
+	game.WidgetHint = gui.NewLabel(label)
+	game.WidgetHint.SetLayoutParams(&gui.DockLayoutParams{gui.DockLeft})
+	game.addDockSize(game.DockTopLeft, game.WidgetHint)
+	game.DockTopLeft.Add(game.WidgetHint)
 }
 
 func (game *Game) AddWidgetIconify(label string) {
@@ -188,7 +200,7 @@ func (game *Game) AddWidgetIconify(label string) {
 	game.WidgetIconify.Subscribe(gui.OnClick, func(name string, ev interface{}) {
 		// TODO
 	})
-	game.dockSize(game.DockTopRight, game.WidgetIconify)
+	game.addDockSize(game.DockTopRight, game.WidgetIconify)
 	game.DockTopRight.Add(game.WidgetIconify)
 }
 
@@ -213,7 +225,13 @@ func (game *Game) RecalcDocks() {
 	w, h := game.Size()
 	w64, h64 := float64(w), float64(h)
 	if game.DockTopLeft != nil {
-		game.DockTopLeft.SetPosition(0, 0)
+		game.DockTopLeft.SetWidth(0)
+		if game.WidgetCharaChanger != nil {
+			game.addDockSize(game.DockTopLeft, game.WidgetCharaChanger)
+		}
+		if game.WidgetHint != nil {
+			game.addDockSize(game.DockTopLeft, game.WidgetHint)
+		}
 	}
 	if game.DockTopRight != nil {
 		x := float32(w64 - float64(game.DockTopRight.TotalWidth()))
@@ -477,7 +495,7 @@ func (game *Game) Fatal(v ...interface{}) {
 
 // Internal functions
 
-func (game *Game) dockSize(p *gui.Panel, w gui.IPanel) {
+func (game *Game) addDockSize(p *gui.Panel, w gui.IPanel) {
 	oldW, oldH := p.TotalWidth(), p.TotalHeight()
 	newW, newH := oldW + w.TotalWidth(), w.TotalHeight()
 	if oldH > newH {
