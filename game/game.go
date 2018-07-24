@@ -119,7 +119,7 @@ func (game *Game) AddWidgetFullScreen(labelFullScreen, labelWindow string) {
 		game.AddDockTopRight()
 	}
 	game.LabelFullScreen = labelFullScreen
-	game.LabelWindow = game.LabelWindow
+	game.LabelWindow = labelWindow
 	label := labelFullScreen
 	if game.FullScreen() {
 		label = labelWindow
