@@ -147,16 +147,16 @@ func (game *Game) AddWidgetIconify(label string) {
 	game.DockTopRight.Add(game.WidgetIconify)
 }
 
-func (game *Game) AddWidgetInt(id int, fmt string, addr *int, large int, units string) {
+func (game *Game) AddWidgetInt(id int, format string, addr *int, large int, units string) {
 	if game.DockTopRight == nil {
 		game.AddDockTopRight()
 	}
 	game.WidgetIntsUnits[id] = gui.NewLabel(units)
 	game.dockSize(game.DockTopRight, game.WidgetIntsUnits[id])
 	game.DockTopRight.Add(game.WidgetIntsUnits[id])
-	example := fmt.Sprintf(fmt, large) // for width
+	example := fmt.Sprintf(format, large) // for width
 	game.WidgetIntsAddrs[id] = addr
-	game.WidgetIntsFmts[id] = fmt
+	game.WidgetIntsFmts[id] = format
 	game.WidgetIntsWidgets[id] = gui.NewLabel(example)
 	game.WidgetIntsWidgets[id].SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
 	game.dockSize(game.DockTopRight, game.WidgetIntsWidgets[id])
