@@ -42,11 +42,21 @@ type Game struct {
 	WidgetFullScreen *gui.Button
 	WidgetHelp       *gui.Button
 	WidgetIconify    *gui.Button
+	WidgetFps        [2]*gui.Label
+	WidgetPing       [2]*gui.Label
 
+/*
 	WidgetIntsAddrs   [4]*int
 	WidgetIntsFmts    [4]string
 	WidgetIntsUnits   [4]*gui.Label
 	WidgetIntsWidgets [4]*gui.Label
+*/
+
+	MaxWidthFps  float64
+	MaxWidthPing float64
+
+	Frame    int64
+	SecFrame int64 // frame at start of this second
 
 	Gs    *gls.GLS
 	Logs  *logs.Logs
@@ -100,6 +110,15 @@ func (game *Game) AddWidgetClose(label string) {
 	})
 	game.dockSize(game.DockTopRight, game.WidgetClose)
 	game.DockTopRight.Add(game.WidgetClose)
+}
+
+func (game *Game) AddWidgetFps() {
+	game.WidgetFps[0] = gui.NewLabel("9999")
+	game.MaxWidthFps = float64(game.WidgetFps[0].TotalWidth())
+	game.WidgetFps[0].SetText("")
+	game.WidgetFps[1] = gui.NewLabel(" fps")
+	game.Root.Add(game.WidgetFps[0])
+	game.Root.Add(game.WidgetFps[1])
 }
 
 func (game *Game) AddWidgetFullScreen(labelFullScreen, labelWindow string) {
@@ -163,6 +182,15 @@ func (game *Game) AddWidgetInt(id int, format string, addr *int, large int, unit
 	game.DockTopRight.Add(game.WidgetIntsWidgets[id])
 }
 
+func (game *Game) AddWidgetPing() {
+	game.WidgetPing[0] = gui.NewLabel("9999")
+	game.MaxWidthPing = float64(game.WidgetPing[0].TotalWidth())
+	game.WidgetPing[0].SetText("")
+	game.WidgetPing[1] = gui.NewLabel(" ms")
+	game.Root.Add(game.WidgetPing[0])
+	game.Root.Add(game.WidgetPing[1])
+}
+
 func (game *Game) FullScreen() bool {
 	return game.Win.FullScreen()
 }
@@ -189,6 +217,28 @@ func (game *Game) RecalcDocks() {
 		x := float32(w64 - float64(game.DockBotRight.TotalWidth()))
 		y := float32(h64 - float64(game.DockBotRight.TotalHeight()))
 		game.DockBotRight.SetPosition(x, y)
+	}
+}
+
+func (game *Game) RecalcPerformance() {
+	w, _ := game.Size()
+	x := float64(w)
+	x -= float64(game.DockTopRight.TotalWidth())
+	if game.WidgetPing[0] != nil && game.WidgetPing[1] != nil {
+		a := game.MaxWidthPing
+		b := float64(game.WidgetPing[1].TotalWidth())
+		x -= b
+		game.WidgetPing[0].SetPosition(float32(x), 0)
+		x -= a
+		game.WidgetPing[1].SetPosition(float32(x), 0)
+	}
+	if game.WidgetFps[0] != nil && game.WidgetFps[1] != nil {
+		a := game.MaxWidthFps
+		b := float64(game.WidgetFps[1].TotalWidth())
+		x -= b
+		game.WidgetFps[0].SetPosition(float32(x), 0)
+		x -= a
+		game.WidgetFps[1].SetPosition(float32(x), 0)
 	}
 }
 
