@@ -34,7 +34,9 @@ type Game struct {
 	DockTopLeft  *gui.Panel
 	DockTopRight *gui.Panel
 
-	Title string
+	Title           string
+	LabelFullScreen string
+	LabelWindow     string
 
 	WidgetClose      *gui.Button
 	WidgetFullScreen *gui.Button
@@ -95,9 +97,13 @@ func (game *Game) AddWidgetClose(label string) {
 	game.DockTopRight.Add(game.WidgetClose)
 }
 
-func (game *Game) AddWidgetFullScreen(label string) {
+func (game *Game) AddWidgetFullScreen(labelFullScreen, labelWindow string) {
 	if game.DockTopRight == nil {
 		game.AddDockTopRight()
+	}
+	label := labelFullScreen
+	if game.FullScreen() {
+		label = labelWindow
 	}
 	game.WidgetFullScreen = gui.NewButton(label)
 	game.WidgetFullScreen.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
@@ -165,6 +171,13 @@ func (game *Game) RecalcDocks() {
 
 func (game *Game) SetFullScreen(fullScreen bool) {
 	game.Win.SetFullScreen(fullScreen)
+	if game.WidgetFullScreen != nil {
+		label := game.LabelFullScreen
+		if fullScreen {
+			label = game.LabelWindow
+		}
+		game.WidgetFullScreen.Label.SetText(label)
+	}
 	game.onWinCh("", nil)
 }
 
