@@ -207,17 +207,17 @@ func (game *Game) RecalcPerformanceWidgets() {
 		a := game.MaxWidthPing
 		b := float64(game.WidgetPing[1].TotalWidth())
 		x -= b
-		game.WidgetPing[0].SetPosition(float32(x), 0)
-		x -= a
 		game.WidgetPing[1].SetPosition(float32(x), 0)
+		x -= a
+		game.WidgetPing[0].SetPosition(float32(x), 0)
 	}
 	if game.WidgetFps[0] != nil && game.WidgetFps[1] != nil {
 		a := game.MaxWidthFps
 		b := float64(game.WidgetFps[1].TotalWidth())
 		x -= b
-		game.WidgetFps[0].SetPosition(float32(x), 0)
-		x -= a
 		game.WidgetFps[1].SetPosition(float32(x), 0)
+		x -= a
+		game.WidgetFps[0].SetPosition(float32(x), 0)
 	}
 }
 
