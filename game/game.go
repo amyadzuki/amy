@@ -29,10 +29,10 @@ type Game struct {
 	Win    window.IWindow
 	Wm     window.IWindowManager
 
-	DockBotLeft  gui.IPanel
-	DockBotRight gui.IPanel
-	DockTopLeft  gui.IPanel
-	DockTopRight gui.IPanel
+	DockBotLeft  *gui.Panel
+	DockBotRight *gui.Panel
+	DockTopLeft  *gui.Panel
+	DockTopRight *gui.Panel
 
 	Title string
 
@@ -65,7 +65,7 @@ func New(title string) (game *Game) {
 }
 
 func (game *Game) AddDockTopRight() {
-	game.DockTopRight := gui.NewPanel(50, 50)
+	game.DockTopRight = gui.NewPanel(50, 50)
 	game.DockTopRight.SetLayout(gui.NewDockLayout())
 	game.Root.Add(game.DockTopRight)
 }
