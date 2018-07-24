@@ -34,9 +34,10 @@ type Game struct {
 	DockTopLeft  *gui.Panel
 	DockTopRight *gui.Panel
 
-	Title           string
+	LabelAccount    string
 	LabelFullScreen string
 	LabelWindow     string
+	Title           string
 
 	WidgetClose      *gui.Button
 	WidgetFullScreen *gui.Button
@@ -78,6 +79,19 @@ func (game *Game) AddDockTopRight() {
 	game.DockTopRight = gui.NewPanel(0, 0)
 	game.DockTopRight.SetLayout(gui.NewDockLayout())
 	game.Root.Add(game.DockTopRight)
+}
+
+func (game *Game) AddWidgetAccount(label string) {
+	if game.DockTopLeft == nil {
+		game.AddDockTopLeft()
+	}
+	game.LabelAccount = label
+	game.WidgetAccount = gui.NewButton(label)
+	game.WidgetAccount.SetLayoutParams(&gui.DockLayoutParams{gui.DockLeft})
+	game.WidgetAccount.Subscribe(gui.OnClick, func(name string, ev interface{}) {
+		//
+	})
+	game.DockTopLeft.Add(game.WidgetAccount)
 }
 
 func (game *Game) AddWidgetClose(label string) {
