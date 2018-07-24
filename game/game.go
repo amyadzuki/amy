@@ -51,8 +51,17 @@ func New(title string) (game *Game) {
 	return
 }
 
+func (game *Game) FullScreen() bool {
+	return game.Win.FullScreen()
+}
+
 func (game *Game) Quit() {
 	game.Win.SetShouldClose(true)
+}
+
+func (game *Game) SetFullScreen(fullScreen bool) {
+	game.Win.SetFullScreen(fullScreen)
+	game.onWinCh("", nil)
 }
 
 func (game *Game) Size() (w, h int) {
@@ -197,8 +206,7 @@ func (game *Game) StartUp(logPath string) (err error) {
 }
 
 func (game *Game) ToggleFullScreen() {
-	game.Win.SetFullScreen(!game.Win.FullScreen())
-	game.onWinch("", nil)
+	game.SetFullScreen(!game.FullScreen())
 }
 
 func (game *Game) ViewportFull() {
