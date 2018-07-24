@@ -200,7 +200,9 @@ func (game *Game) RecalcDocks() {
 func (game *Game) RecalcPerformance() {
 	w, _ := game.Size()
 	x := float64(w)
-	x -= float64(game.DockTopRight.TotalWidth())
+	if game.DockTopRight != nil {
+		x -= float64(game.DockTopRight.TotalWidth())
+	}
 	if game.WidgetPing[0] != nil && game.WidgetPing[1] != nil {
 		a := game.MaxWidthPing
 		b := float64(game.WidgetPing[1].TotalWidth())
