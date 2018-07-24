@@ -36,6 +36,7 @@ type Game struct {
 	Scene *core.Node
 	w, h  int
 
+	AskQuit   bool
 	HaveAudio bool
 	InfoDebug bool
 	InfoTrace bool
