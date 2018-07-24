@@ -101,6 +101,8 @@ func (game *Game) AddWidgetFullScreen(labelFullScreen, labelWindow string) {
 	if game.DockTopRight == nil {
 		game.AddDockTopRight()
 	}
+	game.LabelFullScreen = labelFullScreen
+	game.LabelWindow = game.LabelWindow
 	label := labelFullScreen
 	if game.FullScreen() {
 		label = labelWindow
