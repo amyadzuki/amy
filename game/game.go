@@ -422,6 +422,7 @@ func (game *Game) StartUp(logPath string) (err error) {
 	aspect := float32(float64(width) / float64(height))
 	game.Camera = camera.NewPerspective(65, aspect, 1.0/128.0, 1024.0)
 	game.Scene.Add(game.Camera)
+	game.Camera.SetUp(&math32.Vector3{0, 0, 1})
 
 	game.LightAmbient = light.NewAmbient(&math32.Color{1, 1, 1}, 0.5)
 	game.Scene.Add(game.LightAmbient)
