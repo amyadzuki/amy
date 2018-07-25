@@ -26,5 +26,13 @@ func (w *Performance) Init(large int, label string) {
 	w.Value.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
 	w.Panel.Add(w.Units)
 	w.Panel.Add(w.Value)
+	uw, uh := float64(w.Units.TotalWidth()), float64(w.Units.TotalHeight())
+	vw, vh := float64(w.Value.TotalWidth()), float64(w.Value.TotalHeight())
+	w.Panel.SetWidth(float32(vw + uw))
+	h := vh
+	if uh > h {
+		h = uh
+	}
+	w.Panel.SetHeight(float32(h))
 	w.Units.SetText("")
 }
