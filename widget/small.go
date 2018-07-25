@@ -19,7 +19,6 @@ func (w *Small) Init(label string) {
 	w.Panel = gui.NewPanel(0, 0)
 	w.Label = gui.NewLabel(label)
 	w.Panel.Add(w.Label)
-	lw, lh := float64(w.Label.TotalWidth()), float64(w.Label.TotalHeight())
-	w.Panel.SetWidth(float32(lw))
-	w.Panel.SetHeight(float32(lh))
+	w.Panel.SetWidth(w.Label.TotalWidth())
+	w.Panel.SetHeight(w.Label.TotalHeight())
 }
