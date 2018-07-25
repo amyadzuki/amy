@@ -422,7 +422,7 @@ func (game *Game) StartUp(logPath string) (err error) {
 	if err := game.Rend.AddDefaultShaders(); err != nil {
 		panic(err)
 	}
-	rend.SetGui(game.Root)
+	game.Rend.SetGui(game.Root)
 
 	game.Win.Subscribe(window.OnWindowSize, game.onWinCh)
 	game.Win.Subscribe(window.OnKeyDown, game.onKeyboardKey)
