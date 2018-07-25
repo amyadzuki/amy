@@ -418,6 +418,12 @@ func (game *Game) StartUp(logPath string) (err error) {
 	game.Root.SetSize(float32(width), float32(height))
 	game.Root.SetLayout(gui.NewDockLayout())
 
+	game.Rend = renderer.NewRenderer(game.Gs)
+	if err := game.Rend.AddDefaultShaders(); err != nil {
+		panic(err)
+	}
+	rend.SetGui(game.Root)
+
 	game.Win.Subscribe(window.OnWindowSize, game.onWinCh)
 	game.Win.Subscribe(window.OnKeyDown, game.onKeyboardKey)
 	game.Win.Subscribe(window.OnKeyUp, game.onKeyboardKey)
