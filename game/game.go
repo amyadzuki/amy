@@ -13,6 +13,7 @@ import (
 	"github.com/amyadzuki/amystuff/logs"
 	"github.com/amyadzuki/amystuff/str"
 	"github.com/amyadzuki/amystuff/styles"
+	"github.com/amyadzuki/amystuff/widget"
 
 	//	"github.com/g3n/engine/audio"
 	"github.com/g3n/engine/camera"
@@ -38,14 +39,14 @@ type Game struct {
 	LabelWindow            string
 	Title                  string
 
+	WidgetFps          widget.Performance
+	WidgetPing         widget.Performance
 	WidgetCharaChanger *gui.Button
 	WidgetClose        *gui.Button
 	WidgetFullScreen   *gui.Button
 	WidgetHelp         *gui.Button
 	WidgetHint         *gui.Label
 	WidgetIconify      *gui.Button
-	WidgetFps          [2]*gui.Label
-	WidgetPing         [2]*gui.Label
 
 	MaxWidthFps  float64
 	MaxWidthPing float64
@@ -135,7 +136,7 @@ func (game *Game) AddWidgetClose(label string) {
 }
 
 func (game *Game) AddWidgetFps() {
-	game.AddWidgetPerformance(game.WidgetFps, &game.MaxWidthFps, 999999, " fps  ")
+	game.AddWidgetPerformance(game.WidgetFps, 999999, " fps  ")
 }
 
 func (game *Game) AddWidgetFullScreen(labelFullScreen, labelWindow string) {
@@ -193,22 +194,14 @@ func (game *Game) AddWidgetIconify(label string) {
 	game.DockTop.Add(game.WidgetIconify)
 }
 
-func (game *Game) AddWidgetPerformance(w [2]*gui.Label, wid *float64, large int, label string) {
-	if game.DockTop == nil {
-		game.AddDockTop()
-	}
-	w[0] = gui.NewLabel(strconv.Itoa(large))
-	*wid = float64(w[0].TotalWidth())
-	w[0].SetText("")
-	w[1] = gui.NewLabel(label)
-	w[0].SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
-	w[1].SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
-	game.DockTop.Add(w[1])
-	game.DockTop.Add(w[0])
+func (game *Game) AddWidgetPerformance(w *widget.Performance, large int, label string) {
+	w.Init(large, label)
+	w.Panel.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
+	game.DockTop.Add(w.Panel)
 }
 
 func (game *Game) AddWidgetPing() {
-	game.AddWidgetPerformance(game.WidgetPing, &game.MaxWidthPing, 999999, " ms  ")
+	game.AddWidgetPerformance(game.WidgetPing, 999999, " ms  ")
 }
 
 func (game *Game) FullScreen() bool {
