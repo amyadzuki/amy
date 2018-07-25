@@ -48,9 +48,6 @@ type Game struct {
 	WidgetHint         *gui.Label
 	WidgetIconify      *gui.Button
 
-	MaxWidthFps  float64
-	MaxWidthPing float64
-
 	Frame    int64
 	SecFrame int64 // frame at start of this second
 
