@@ -27,6 +27,7 @@ import (
 
 type Game struct {
 	Camera *camera.Perspective // camera.ICamera if my PR gets accepted
+	Scene  core.INode
 	Win    window.IWindow
 	Wm     window.IWindowManager
 
@@ -422,6 +423,7 @@ func (game *Game) StartUp(logPath string) (err error) {
 	if err := game.Rend.AddDefaultShaders(); err != nil {
 		panic(err)
 	}
+	game.Rend.SetScene(game.Scene)
 	game.Rend.SetGui(game.Root)
 
 	game.Win.Subscribe(window.OnWindowSize, game.onWinCh)
