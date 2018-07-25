@@ -115,9 +115,9 @@ func (game *Game) AddWidgetClose(label string) {
 	}
 	game.WidgetClose = gui.NewButton(label)
 	game.WidgetClose.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
-	game.WidgetClose.SetStyles(&styles.CloseButton)
+	game.WidgetClose.SetStyles(&styles.AmyDarkCloseButton)
 	game.WidgetClose.Subscribe(gui.OnClick, func(name string, ev interface{}) {
-		game.WidgetClose.SetStyles(&styles.ClosingButton)
+		game.WidgetClose.SetStyles(&styles.AmyDarkClosingButton)
 		if game.SoftQuit() > 0 {
 			game.Quit()
 		}
@@ -127,7 +127,7 @@ func (game *Game) AddWidgetClose(label string) {
 			if game.AskQuit < 0 {
 				game.AskQuit = 0
 			}
-			game.WidgetClose.SetStyles(&styles.CloseButton)
+			game.WidgetClose.SetStyles(&styles.AmyDarkCloseButton)
 		}()
 	})
 	game.addDockSize(game.DockTop, game.WidgetClose)
@@ -426,6 +426,8 @@ func (game *Game) StartUp(logPath string) (err error) {
 
 	game.LightAmbient = light.NewAmbient(&math32.Color{1, 1, 1}, 0.5)
 	game.Scene.Add(game.LightAmbient)
+
+	gui.SetStyleDefault(&styles.AmyDark)
 
 	game.Root = gui.NewRoot(game.Gs, game.Win)
 	game.Root.SetSize(float32(width), float32(height))
