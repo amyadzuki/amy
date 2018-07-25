@@ -33,7 +33,7 @@ func (w *Performance) Init(large int, label string) {
 	if uh > h {
 		h = uh
 	}
-	w.Units.SetPosition(vw, 0)
+	w.Units.SetPosition(float32(vw), 0)
 	w.Panel.SetHeight(float32(h))
 	w.Value.SetText("")
 }
