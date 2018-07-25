@@ -27,7 +27,6 @@ import (
 
 type Game struct {
 	Camera *camera.Perspective // camera.ICamera if my PR gets accepted
-	Scene  core.INode
 	Win    window.IWindow
 	Wm     window.IWindowManager
 
