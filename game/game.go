@@ -41,11 +41,11 @@ type Game struct {
 
 	WidgetFps          widget.Performance
 	WidgetPing         widget.Performance
+	WidgetHint         widget.Small
 	WidgetCharaChanger *gui.Button
 	WidgetClose        *gui.Button
 	WidgetFullScreen   *gui.Button
 	WidgetHelp         *gui.Button
-	WidgetHint         *gui.Label
 	WidgetIconify      *gui.Button
 
 	Frame    int64
@@ -172,10 +172,9 @@ func (game *Game) AddWidgetHint(label string) {
 	if game.DockTop == nil {
 		game.AddDockTop()
 	}
-	game.WidgetHint = gui.NewLabel(label)
-	game.WidgetHint.SetLayoutParams(&gui.DockLayoutParams{gui.DockLeft})
-	game.addDockSize(game.DockTop, game.WidgetHint)
-	game.DockTop.Add(game.WidgetHint)
+	game.WidgetHint.Init(label)
+	game.WidgetHint.Panel.SetLayoutParams(&gui.DockLayoutParams{gui.DockLeft})
+	game.DockTop.Add(game.WidgetHint.Panel)
 }
 
 func (game *Game) AddWidgetIconify(label string) {
@@ -276,6 +275,15 @@ func (game *Game) SetFullScreen(fullScreen bool) {
 		game.WidgetFullScreen.Label.SetText(label)
 	}
 	game.onWinCh("", nil)
+}
+
+func (game *Game) SetHint(label string) {
+	if game.WidgetHint.Label != nil {
+		game.WidgetHint.Label.SetText(label)
+		game.WidgetHint.Panel.SetWidth(game.WidgetHint.Label.TotalWidth())
+		return
+	}
+	game.AddWidgetHint(label)
 }
 
 func (game *Game) Size() (w, h int) {
