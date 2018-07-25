@@ -136,7 +136,7 @@ func (game *Game) AddWidgetClose(label string) {
 }
 
 func (game *Game) AddWidgetFps() {
-	game.AddWidgetPerformance(game.WidgetFps, 999999, " fps  ")
+	game.AddWidgetPerformance(&game.WidgetFps, 999999, " fps  ")
 }
 
 func (game *Game) AddWidgetFullScreen(labelFullScreen, labelWindow string) {
@@ -201,7 +201,7 @@ func (game *Game) AddWidgetPerformance(w *widget.Performance, large int, label s
 }
 
 func (game *Game) AddWidgetPing() {
-	game.AddWidgetPerformance(game.WidgetPing, 999999, " ms  ")
+	game.AddWidgetPerformance(&game.WidgetPing, 999999, " ms  ")
 }
 
 func (game *Game) FullScreen() bool {
@@ -244,6 +244,7 @@ func (game *Game) RecalcDocks() {
 }
 
 func (game *Game) RecalcPerformanceWidgets() {
+	/*
 	w, _ := game.Size()
 	x := float64(w)
 	if game.DockTop != nil { // FIXME
@@ -265,6 +266,7 @@ func (game *Game) RecalcPerformanceWidgets() {
 		x -= a
 		game.WidgetFps[0].SetPosition(float32(x), 0)
 	}
+	*/
 }
 
 func (game *Game) SetFullScreen(fullScreen bool) {
