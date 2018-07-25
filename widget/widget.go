@@ -19,11 +19,11 @@ func NewPerformance(large int, label string) (w *Performance) {
 
 func (w *Performance) Init(large int, label string) {
 	w.Panel = gui.NewPanel(0, 0)
-	w.Panel.SetLayout(gui.NewDockLayout())
+//	w.Panel.SetLayout(gui.NewDockLayout())
 	w.Units = gui.NewLabel(label)
-	w.Units.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
+//	w.Units.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
 	w.Value = gui.NewLabel(strconv.Itoa(large))
-	w.Value.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
+//	w.Value.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
 	w.Panel.Add(w.Units)
 	w.Panel.Add(w.Value)
 	uw, uh := float64(w.Units.TotalWidth()), float64(w.Units.TotalHeight())
@@ -33,6 +33,7 @@ func (w *Performance) Init(large int, label string) {
 	if uh > h {
 		h = uh
 	}
+	w.Units.SetPosition(vw, 0)
 	w.Panel.SetHeight(float32(h))
 	w.Value.SetText("")
 }
