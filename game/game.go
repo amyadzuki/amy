@@ -39,6 +39,9 @@ type Game struct {
 	LabelWindow            string
 	Title                  string
 
+	Frame    int64
+	SecFrame int64 // frame at start of this second
+
 	WidgetFps          widget.Performance
 	WidgetPing         widget.Performance
 	WidgetHint         widget.Small
@@ -48,15 +51,14 @@ type Game struct {
 	WidgetHelp         *gui.Button
 	WidgetIconify      *gui.Button
 
-	Frame    int64
-	SecFrame int64 // frame at start of this second
+	Gs           *gls.GLS
+	LightAmbient *light.Ambient
+	Logs         *logs.Logs
+	Rend         *renderer.Renderer
+	Root         *gui.Root
+	Scene        *core.Node
 
-	Gs    *gls.GLS
-	Logs  *logs.Logs
-	Rend  *renderer.Renderer
-	Root  *gui.Root
-	Scene *core.Node
-	w, h  int
+	w, h int
 
 	AskQuit   int8
 	WantHelp  bool
@@ -69,8 +71,7 @@ type Game struct {
 
 func New(title string) (game *Game) {
 	game = new(Game)
-	game.Title = title
-	game.Scene = core.NewNode()
+	game.Init(title)
 	return
 }
 
@@ -202,6 +203,12 @@ func (game *Game) AddWidgetPing() {
 
 func (game *Game) FullScreen() bool {
 	return game.Win.FullScreen()
+}
+
+func (game *Game) Init(title string) {
+	game.Title = title
+	game.Scene = core.NewNode()
+	return
 }
 
 func (game *Game) Quit() {
@@ -413,6 +420,10 @@ func (game *Game) StartUp(logPath string) (err error) {
 	game.ViewportFull()
 	aspect := float32(float64(width) / float64(height))
 	game.Camera = camera.NewPerspective(65, aspect, 1.0/128.0, 1024.0)
+	game.Scene.Add(game.Camera)
+
+	game.LightAmbient = light.NewAmbient(&math32.Color{1, 1, 1}, 0.5)
+	game.Scene.Add(game.LightAmbient)
 
 	game.Root = gui.NewRoot(game.Gs, game.Win)
 	game.Root.SetSize(float32(width), float32(height))
