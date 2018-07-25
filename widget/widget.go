@@ -34,5 +34,5 @@ func (w *Performance) Init(large int, label string) {
 		h = uh
 	}
 	w.Panel.SetHeight(float32(h))
-	w.Units.SetText("")
+	w.Value.SetText("")
 }
