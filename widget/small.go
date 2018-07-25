@@ -1,5 +1,9 @@
 package widget
 
+import (
+	"github.com/g3n/engine/gui"
+)
+
 type Small struct {
 	Panel *gui.Panel
 	Label *gui.Label
