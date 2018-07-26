@@ -27,6 +27,8 @@ type Control struct {
 	MinDistance     float32
 	MinPolarAngle   float32
 	RotateSpeed     float32
+	Xoffset         float32
+	Yoffset         float32
 	ZoomSpeed       float32
 
 	mode CamMode
@@ -40,7 +42,6 @@ type Control struct {
 
 	enabled    bool
 	rotating   bool
-	subsCursor bool
 	subsEvents bool
 }
 
@@ -63,11 +64,11 @@ func New(icamera camera.ICamera, iwindow window.IWindow) (c *Control) {
 }
 
 func (c *Control) Dispose() {
+	c.Window.UnsubscribeID(window.OnCursor, &c.subsEvents)
 	c.Window.UnsubscribeID(window.OnMouseUp, &c.subsEvents)
 	c.Window.UnsubscribeID(window.OnMouseDown, &c.subsEvents)
 	c.Window.UnsubscribeID(window.OnScroll, &c.subsEvents)
 	c.Window.UnsubscribeID(window.OnKeyDown, &c.subsEvents)
-	c.Window.UnsubscribeID(window.OnCursor, &c.subsCursor)
 }
 
 func (c *Control) Enabled() bool {
@@ -94,7 +95,7 @@ func (c *Control) Init(icamera camera.ICamera, iwindow window.IWindow) {
 	c.RotateSpeed = 1.0
 	c.ZoomSpeed = 1.0
 
-	c.mode = CamMode(DefaultToScreen)
+	c.mode.Init(DefaultToScreen)
 
 	c.Zoom = -0x21
 	c.ZoomStep1P = 0x08
@@ -105,9 +106,9 @@ func (c *Control) Init(icamera camera.ICamera, iwindow window.IWindow) {
 
 	c.enabled = true
 	c.rotating = false
-	c.subsCursor = false
 	c.subsEvents = false
 
+	c.Window.SubscribeID(window.OnCursor, &c.subsEvents, c.onMouseCursor)
 	c.Window.SubscribeID(window.OnMouseUp, &c.subsEvents, c.onMouseButton)
 	c.Window.SubscribeID(window.OnMouseDown, &c.subsEvents, c.onMouseButton)
 	c.Window.SubscribeID(window.OnScroll, &c.subsEvents, c.onMouseScroll)
@@ -158,11 +159,9 @@ func (c *Control) SetMode(cm CamMode) (was CamMode) {
 	switch {
 	case was.World() && cm.Screen():
 		c.rotating = false
-		c.Window.UnsubscribeID(window.OnCursor, &c.subsCursor)
 	case was.Screen() && cm.World():
 		c.rotating = true
-		c.rotateStart.Set(float32(ev.Xpos), float32(ev.Ypos))
-		c.Window.SubscribeID(window.OnCursor, &c.subsCursor, c.onMouseCursor)
+		c.rotateStart.Set(float32(c.Xoffset), float32(c.Yoffset))
 	}
 	return
 }
@@ -216,15 +215,17 @@ func (c *Control) onMouseButton(evname string, event interface{}) {
 }
 
 func (c *Control) onMouseCursor(evname string, event interface{}) {
-	if !c.Enabled() || c.Mode().Screen() {
+	ev := event.(*window.CursorEvent)
+	xOffset, yOffset := ev.Xpos, ev.Ypos
+	c.Xoffset, c.Yoffset = xOffset, yOffset
+	if !c.rotating || !c.Enabled() || c.Mode().Screen() {
 		return
 	}
-	ev := event.(*window.CursorEvent)
-	c.rotateEnd.Set(float32(ev.Xpos), float32(ev.Ypos))
+	c.rotateEnd.Set(xOffset, yOffset)
 	c.rotateDelta.SubVectors(&c.rotateEnd, &c.rotateStart)
 	c.rotateStart = c.rotateEnd
 	width, height := c.Window.Size()
-	by := 2.0 * math.Pi * c.RotateSpeed
+	by := 2.0 * math.Pi * float64(c.RotateSpeed)
 	c.RotateLeft(by / float64(width) * float64(c.rotateDelta.X))
 	c.RotateUp(by / float64(height) * float64(c.rotateDelta.Y))
 }
