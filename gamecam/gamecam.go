@@ -147,7 +147,7 @@ func (c *Control) SetEnabled(enabled bool) (was bool) {
 func (c *Control) SetMode(cm CamMode) (was CamMode) {
 	was = c.mode
 	c.mode = cm
-	fmt.Printf("SetMode(%x)", cm)
+	fmt.Printf("SetMode(%x => %x) screens: %v => %v", was, cm, was.Screen(), cm.Screen())
 	switch {
 	case was.World() && cm.Screen():
 		fmt.Print(": first case")
