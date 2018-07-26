@@ -93,7 +93,7 @@ func (c *Control) Init(icamera camera.ICamera, iwindow window.IWindow) {
 	c.MinDistance = 0.01
 	c.MinPolarAngle = 0.0
 	c.RotateSpeed = 1.0
-	c.ZoomSpeed = 1.0
+	c.ZoomSpeed = 0.1
 
 	c.mode.Init(DefaultToScreen)
 
@@ -272,6 +272,7 @@ const updateRotateEpsilon float64 = 0.01
 const updateRotatePiMinusEpsilon float64 = math.Pi - updateRotateEpsilon
 
 func (c *Control) updateRotate(thetaDelta, phiDelta float64) {
+	fmt.Printf("updateRotate: %f, %f\n", thetaDelta, phiDelta)
 	var max, min float64
 	if float64(c.MaxPolarAngle) < updateRotatePiMinusEpsilon {
 		max = float64(c.MaxPolarAngle)
@@ -317,11 +318,12 @@ func (c *Control) updateZoom(zoomDelta float64) {
 		zoom := float64(ortho.Zoom()) - updateZoomEpsilon*zoomDelta
 		ortho.SetZoom(float32(zoom))
 	} else {
+		fmt.Printf("updateZoom:else: %f\n", zoomDelta)
 		position := c.camera.Position()
 		target := c.camera.Target()
 		vdir := position
 		vdir.Sub(&target)
-		dist := float64(vdir.Length()) * (1.0 + zoomDelta*float64(c.ZoomSpeed)/10.0)
+		dist := float64(vdir.Length()) * (1.0 + zoomDelta*float64(c.ZoomSpeed))
 		dist = maths.ClampFloat64(dist, float64(c.MinDistance), float64(c.MaxDistance))
 		vdir.SetLength(float32(dist))
 		target.Add(&vdir)
