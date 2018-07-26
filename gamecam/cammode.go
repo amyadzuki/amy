@@ -33,7 +33,7 @@ func (cm CamMode) World() bool {
 }
 
 const (
-	DefaultToScreen uint8 = iota << 1
+	DefaultToScreen uint8 = 1 << iota
 	ScreenButtonHeld
 	ScreenToggleOn
 	MiddleMouseHeld
