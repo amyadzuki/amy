@@ -9,15 +9,21 @@ type CamMode struct {
 }
 
 var ImplScreen func(CamMode) bool = nil
+var ForceScreen, ForceWorld bool
 
 func (cm *CamMode) Init(mask uint8) {
 	cm.Uint8 = bitfield.Uint8(mask)
 }
 
 func (cm CamMode) Screen() bool {
-	if ImplScreen != nil {
+	switch {
+	case ImplScreen != nil:
 		return ImplScreen(cm)
-	} else {
+	case ForceScreen:
+		return true
+	case ForceWorld:
+		return false
+	default:
 		return cm.Any(ScreenReasons) && !cm.Any(WorldOverrides)
 	}
 }
