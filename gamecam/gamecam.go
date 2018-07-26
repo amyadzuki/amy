@@ -96,7 +96,7 @@ func (c *Control) Init(icamera camera.ICamera, iwindow window.IWindow) {
 
 	c.enabled = true
 	c.rotating = false
-	c.subsEvents = false
+	c.subsEvents = 0
 
 	c.Window.SubscribeID(window.OnCursor, &c.subsEvents, c.onMouseCursor)
 	c.Window.SubscribeID(window.OnMouseUp, &c.subsEvents, c.onMouseButton)
