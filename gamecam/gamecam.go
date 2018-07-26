@@ -254,11 +254,16 @@ func (c *Control) onMouseButton(evname string, event interface{}) {
 }
 
 func (c *Control) onMouseCursor(evname string, event interface{}) {
-	if c.ignoreMouseCursor {
-		return
-	}
 	ev := event.(*window.CursorEvent)
 	xOffset, yOffset := ev.Xpos, ev.Ypos
+	if c.ignoreMouseCursor {
+		c.Xoffset, c.Yoffset = 0, 0
+		c.rotateStart.Set(float32(Xoffset), float32(Yoffset))
+		c.rotateEnd = c.rotateStart
+		c.ignoreMouseCursor = false
+		return
+	}
+	c.ignoreMouseCursor = true
 	c.Xoffset, c.Yoffset = xOffset, yOffset
 	if !c.rotating || !c.Enabled() || c.Mode().Screen() {
 		return
@@ -272,13 +277,7 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	by := 2.0 * math.Pi * float64(c.RotateSpeed)
 	c.RotateLeft(by / float64(w64) * float64(rotateDelta.X))
 	c.RotateUp(by / float64(h64) * float64(rotateDelta.Y))
-	//c.ignoreMouseCursor = true
-	c.rotating = false
 	c.IWindow.SetCursorPos(w64*0.5, h64*0.5)
-	//c.ignoreMouseCursor = false
-	c.rotating = true
-	c.rotateStart.Set(float32(c.Xoffset), float32(c.Yoffset))
-	c.rotateEnd = c.rotateStart
 }
 
 func (c *Control) onMouseScroll(evname string, event interface{}) {
