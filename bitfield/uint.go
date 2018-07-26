@@ -14,7 +14,7 @@ func (bf Uint) Any(mask uint) bool {
 }
 
 func (bf *Uint) Clr(mask uint) *Uint {
-	bf &= Uint(^mask)
+	*bf &= Uint(^mask)
 	return
 }
 
@@ -28,7 +28,7 @@ func (bf *Uint) Copy() Uint {
 }
 
 func (bf *Uint) Set(mask uint) *Uint {
-	bf |= Uint(mask)
+	*bf |= Uint(mask)
 	return
 }
 
@@ -38,7 +38,7 @@ func (bf Uint) SetCopy(mask uint) Uint {
 }
 
 func (bf *Uint) Xor(mask uint) *Uint {
-	bf |= Uint(mask)
+	*bf |= Uint(mask)
 	return
 }
 
@@ -61,7 +61,7 @@ func (bf Uint8) Any(mask uint8) bool {
 }
 
 func (bf *Uint8) Clr(mask uint8) *Uint8 {
-	bf &= Uint8(^mask)
+	*bf &= Uint8(^mask)
 	return
 }
 
@@ -75,7 +75,7 @@ func (bf *Uint8) Copy() Uint8 {
 }
 
 func (bf *Uint8) Set(mask uint8) *Uint8 {
-	bf |= Uint8(mask)
+	*bf |= Uint8(mask)
 	return
 }
 
@@ -85,7 +85,7 @@ func (bf Uint8) SetCopy(mask uint8) Uint8 {
 }
 
 func (bf *Uint8) Xor(mask uint8) *Uint8 {
-	bf |= Uint8(mask)
+	*bf |= Uint8(mask)
 	return
 }
 
@@ -108,7 +108,7 @@ func (bf Uint16) Any(mask uint16) bool {
 }
 
 func (bf *Uint16) Clr(mask uint16) *Uint16 {
-	bf &= Uint16(^mask)
+	*bf &= Uint16(^mask)
 	return
 }
 
@@ -122,7 +122,7 @@ func (bf *Uint16) Copy() Uint16 {
 }
 
 func (bf *Uint16) Set(mask uint16) *Uint16 {
-	bf |= Uint16(mask)
+	*bf |= Uint16(mask)
 	return
 }
 
@@ -132,7 +132,7 @@ func (bf Uint16) SetCopy(mask uint16) Uint16 {
 }
 
 func (bf *Uint16) Xor(mask uint16) *Uint16 {
-	bf |= Uint16(mask)
+	*bf |= Uint16(mask)
 	return
 }
 
@@ -155,7 +155,7 @@ func (bf Uint32) Any(mask uint32) bool {
 }
 
 func (bf *Uint32) Clr(mask uint32) *Uint32 {
-	bf &= Uint32(^mask)
+	*bf &= Uint32(^mask)
 	return
 }
 
@@ -169,7 +169,7 @@ func (bf *Uint32) Copy() Uint32 {
 }
 
 func (bf *Uint32) Set(mask uint32) *Uint32 {
-	bf |= Uint32(mask)
+	*bf |= Uint32(mask)
 	return
 }
 
@@ -179,7 +179,7 @@ func (bf Uint32) SetCopy(mask uint32) Uint32 {
 }
 
 func (bf *Uint32) Xor(mask uint32) *Uint32 {
-	bf |= Uint32(mask)
+	*bf |= Uint32(mask)
 	return
 }
 
@@ -202,7 +202,7 @@ func (bf Uint64) Any(mask uint64) bool {
 }
 
 func (bf *Uint64) Clr(mask uint64) *Uint64 {
-	bf &= Uint64(^mask)
+	*bf &= Uint64(^mask)
 	return
 }
 
@@ -216,7 +216,7 @@ func (bf *Uint64) Copy() Uint64 {
 }
 
 func (bf *Uint64) Set(mask uint64) *Uint64 {
-	bf |= Uint64(mask)
+	*bf |= Uint64(mask)
 	return
 }
 
@@ -226,7 +226,7 @@ func (bf Uint64) SetCopy(mask uint64) Uint64 {
 }
 
 func (bf *Uint64) Xor(mask uint64) *Uint64 {
-	bf |= Uint64(mask)
+	*bf |= Uint64(mask)
 	return
 }
 
