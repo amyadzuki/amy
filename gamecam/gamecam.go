@@ -63,11 +63,11 @@ func New(icamera camera.ICamera, iwindow window.IWindow) (c *Control) {
 }
 
 func (c *Control) Dispose() {
-	c.window.UnsubscribeID(window.OnMouseUp, &c.subsEvents)
-	c.window.UnsubscribeID(window.OnMouseDown, &c.subsEvents)
-	c.window.UnsubscribeID(window.OnScroll, &c.subsEvents)
-	c.window.UnsubscribeID(window.OnKeyDown, &c.subsEvents)
-	c.window.UnsubscribeID(window.OnCursor, &c.subsCursor)
+	c.Window.UnsubscribeID(window.OnMouseUp, &c.subsEvents)
+	c.Window.UnsubscribeID(window.OnMouseDown, &c.subsEvents)
+	c.Window.UnsubscribeID(window.OnScroll, &c.subsEvents)
+	c.Window.UnsubscribeID(window.OnKeyDown, &c.subsEvents)
+	c.Window.UnsubscribeID(window.OnCursor, &c.subsCursor)
 }
 
 func (c *Control) Enabled() bool {
@@ -108,10 +108,10 @@ func (c *Control) Init(icamera camera.ICamera, iwindow window.IWindow) {
 	c.subsCursor = false
 	c.subsEvents = false
 
-	c.window.SubscribeID(window.OnMouseUp, &c.subsEvents, c.onMouseButton)
-	c.window.SubscribeID(window.OnMouseDown, &c.subsEvents, c.onMouseButton)
-	c.window.SubscribeID(window.OnScroll, &c.subsEvents, c.onMouseScroll)
-	c.window.SubscribeID(window.OnKeyDown, &c.subsEvents, c.onKeyboardKey)
+	c.Window.SubscribeID(window.OnMouseUp, &c.subsEvents, c.onMouseButton)
+	c.Window.SubscribeID(window.OnMouseDown, &c.subsEvents, c.onMouseButton)
+	c.Window.SubscribeID(window.OnScroll, &c.subsEvents, c.onMouseScroll)
+	c.Window.SubscribeID(window.OnKeyDown, &c.subsEvents, c.onKeyboardKey)
 	return
 }
 
@@ -158,11 +158,11 @@ func (c *Control) SetMode(cm CamMode) (was CamMode) {
 	switch {
 	case was.World() && cm.Screen():
 		c.rotating = false
-		c.window.UnsubscribeID(window.OnCursor, &c.subsCursor)
+		c.Window.UnsubscribeID(window.OnCursor, &c.subsCursor)
 	case was.Screen() && cm.World():
 		c.rotating = true
 		c.rotateStart.Set(float32(ev.Xpos), float32(ev.Ypos))
-		c.window.SubscribeID(window.OnCursor, &c.subsCursor, c.onMouseCursor)
+		c.Window.SubscribeID(window.OnCursor, &c.subsCursor, c.onMouseCursor)
 	}
 	return
 }
@@ -223,7 +223,7 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	c.rotateEnd.Set(float32(ev.Xpos), float32(ev.Ypos))
 	c.rotateDelta.SubVectors(&c.rotateEnd, &c.rotateStart)
 	c.rotateStart = c.rotateEnd
-	width, height := c.window.Size()
+	width, height := c.Window.Size()
 	by := 2.0 * math.Pi * c.RotateSpeed
 	c.RotateLeft(by / float64(width) * float64(c.rotateDelta.X))
 	c.RotateUp(by / float64(height) * float64(c.rotateDelta.Y))
