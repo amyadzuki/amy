@@ -115,6 +115,7 @@ func (c *Control) Init(icamera camera.ICamera, iwindow window.IWindow) {
 	c.Window.SubscribeID(window.OnMouseDown, &c.subsEvents, c.onMouseButton)
 	c.Window.SubscribeID(window.OnScroll, &c.subsEvents, c.onMouseScroll)
 	c.Window.SubscribeID(window.OnKeyDown, &c.subsEvents, c.onKeyboardKey)
+	fmt.Println("Subscribed!")
 	return
 }
 
@@ -203,6 +204,7 @@ func (c *Control) ZoomOut(amount float64) {
 
 func (c *Control) onMouseButton(evname string, event interface{}) {
 	if !c.Enabled() {
+		fmt.Println("    >>> Quick return")
 		return
 	}
 	ev := event.(*window.MouseEvent)
@@ -218,10 +220,12 @@ func (c *Control) onMouseButton(evname string, event interface{}) {
 }
 
 func (c *Control) onMouseCursor(evname string, event interface{}) {
+	fmt.Println("onMouseCursor")
 	ev := event.(*window.CursorEvent)
 	xOffset, yOffset := ev.Xpos, ev.Ypos
 	c.Xoffset, c.Yoffset = xOffset, yOffset
 	if !c.rotating || !c.Enabled() || c.Mode().Screen() {
+		fmt.Println("    >>> Quick return")
 		return
 	}
 	c.rotateEnd.Set(xOffset, yOffset)
@@ -235,7 +239,9 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 }
 
 func (c *Control) onMouseScroll(evname string, event interface{}) {
+	fmt.Println("onMouseScroll")
 	if !c.Enabled() || !c.EnableZoom || c.Mode().Screen() {
+		fmt.Println("    >>> Quick return")
 		return
 	}
 	ev := event.(*window.ScrollEvent)
@@ -243,7 +249,9 @@ func (c *Control) onMouseScroll(evname string, event interface{}) {
 }
 
 func (c *Control) onKeyboardKey(evname string, event interface{}) {
+	fmt.Println("onKeyboardKey")
 	if !c.Enabled() || !c.EnableKeys {
+		fmt.Println("    >>> Quick return")
 		return
 	}
 	ev := event.(*window.KeyEvent)
