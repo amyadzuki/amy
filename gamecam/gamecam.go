@@ -215,7 +215,7 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	c.Xoffset, c.Yoffset = xOffset, yOffset
 	if !c.rotating || !c.Enabled() || c.Mode().Screen() {
 		fmt.Println("    >>> Quick return")
-		fmt.Printf("        >>> %v %v %v", !c.rotating, !c.Enabled(), c.Mode().Screen())
+		fmt.Printf("        >>> %v %v %v %x\n", !c.rotating, !c.Enabled(), c.Mode().Screen(), c.Mode())
 		return
 	}
 	c.rotateEnd.Set(xOffset, yOffset)
@@ -232,7 +232,7 @@ func (c *Control) onMouseScroll(evname string, event interface{}) {
 	fmt.Println("onMouseScroll")
 	if !c.Enabled() || !c.EnableZoom || c.Mode().Screen() {
 		fmt.Println("    >>> Quick return")
-		fmt.Printf("        >>> %v %v %v", !c.Enabled(), !c.EnableZoom, c.Mode().Screen())
+		fmt.Printf("        >>> %v %v %v %x\n", !c.Enabled(), !c.EnableZoom, c.Mode().Screen(), c.Mode())
 		return
 	}
 	ev := event.(*window.ScrollEvent)
