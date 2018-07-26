@@ -13,12 +13,14 @@ import (
 )
 
 type Control struct {
-	iCamera camera.ICamera
+	Followee Followee
+
 	IWindow window.IWindow
 
 	mutexMouseCursor trylock.Mutex // sizes: sync.Mutex: 8, trylock.Mutex: 8
 
 	camera *camera.Camera
+	persp  *camera.Perspective
 
 	position0 math32.Vector3
 	target0   math32.Vector3
@@ -54,9 +56,9 @@ type Control struct {
 	subsEvents int
 }
 
-func New(iCamera camera.ICamera, iWindow window.IWindow) (c *Control) {
+func New(persp *camera.Perspective, iWindow window.IWindow) (c *Control) {
 	c = new(Control)
-	c.Init(iCamera, iWindow)
+	c.Init(persp, iWindow)
 	return
 }
 
@@ -77,10 +79,11 @@ func (c *Control) Enabled() bool {
 	return c.enabled
 }
 
-func (c *Control) Init(iCamera camera.ICamera, iWindow window.IWindow) {
-	c.iCamera = iCamera
+func (c *Control) Init(persp *camera.Perspective, iWindow window.IWindow) {
 	c.IWindow = iWindow
-	c.camera = iCamera.GetCamera()
+
+	c.camera = persp.GetCamera()
+	c.persp = persp
 
 	c.position0 = c.camera.Position()
 	c.target0 = c.camera.Target()
@@ -124,6 +127,14 @@ func (c *Control) Init(iCamera camera.ICamera, iWindow window.IWindow) {
 
 func (c *Control) Mode() CamMode {
 	return c.mode
+}
+
+func (c *Control) Target() math32.Vector3 {
+	if c.zoom >= 0 {
+		// First-person camera
+	} else {
+		// Third-person camera
+	}
 }
 
 func (c *Control) Reset() {
@@ -190,12 +201,13 @@ func (c *Control) SetMode(cm CamMode) (was CamMode) {
 
 func (c *Control) ZoomBySteps(step1P, step3P int) {
 	old := int(c.Zoom)
-	var new int
+	var new, init int
 	if old >= 0 {
 		new = old + step1P
 		switch {
 		case new < 0:
 			new = -1
+			init = 3
 		case new > 0x70:
 			new = 0x70
 		}
@@ -204,13 +216,21 @@ func (c *Control) ZoomBySteps(step1P, step3P int) {
 		switch {
 		case new >= 0:
 			new = 0
+			init = 1
 		case new < -0x71:
 			new = -0x71
 		}
 	}
 	zoom := int8(new)
 	c.Zoom = zoom
-	c.updateZoomAbsolute(zoom)
+	switch init {
+	case 0:
+		c.updateZoomAbsolute(zoom)
+	case 1:
+		c.initPositionAndTarget1P()
+	case 3:
+		c.initPositionAndTarget3P()
+	}
 }
 
 func (c *Control) ZoomIn(amount float64) {
@@ -306,6 +326,29 @@ func (c *Control) onMouseScroll(evname string, event interface{}) {
 	c.ZoomIn(float64(ev.Yoffset))
 }
 
+func (c *Control) initPositionAndTarget1P() {
+	vec := c.Followee.Position()
+	x, y, z := float64(vec.X), float64(vec.Y), float64(vec.Z)
+	z += c.Followee.HeightToEye()
+	vec.Z = float32(z)
+	c.camera.SetPositionVec(&vec)
+	dx, dy := c.Followee.FacingNormalized()
+	vec.X, vec.Y = float32(x+dx), float32(y+dy)
+	c.camera.LookAt(&vec)
+}
+
+func (c *Control) initPositionAndTarget3P() {
+	vec := c.Followee.Position()
+	x, y, z := float64(vec.X), float64(vec.Y), float64(vec.Z)
+	z += c.Followee.HeightToEye()
+	vec.Z = float32(z)
+	c.camera.LookAt(&vec)
+	dx, dy := c.Followee.FacingNormalized()
+	vec.X, vec.Y = float32(x-dx), float32(y-dy)
+	vec.Z = float32(z + math.Phi)
+	c.camera.SetPositionVec(vec.Normalize())
+}
+
 const updateRotateEpsilon float64 = 0.01
 const updateRotatePiMinusEpsilon float64 = math.Pi - updateRotateEpsilon
 
@@ -354,53 +397,21 @@ const updateZoomAbsoluteScalar1P float64 = 1.0 / 16.0
 const updateZoomAbsoluteScalar3P float64 = 1.0 / 16.0
 
 func (c *Control) updateZoomAbsolute(zoom int8) {
-	if ortho, ok := c.iCamera.(*camera.Orthographic); ok {
-		orthoZoom := updateZoomEpsilonNegated * float64(zoom)
-		ortho.SetZoom(float32(orthoZoom))
-		panic("Not implemented: orthographic zoom") // todo: implement someday
-	} else {
-		if zoom < 0 {
-			// Lock the target and change the position
-			power := float64(-(zoom + 1)) * updateZoomAbsoluteScalar3P
-			distance := math.Pow(math.Phi, power)
-			position := c.camera.Position()
-			target := c.camera.Target()
-			position.Sub(&target)
-			distance = maths.ClampFloat64(distance,
-				float64(c.MinDistance), float64(c.MaxDistance))
-			position.SetLength(float32(distance))
-			target.Add(&position)
-			c.camera.SetPositionVec(&target)
-		} else {
-			// Lock the position and change the target
-			power := float64(zoom) * updateZoomAbsoluteScalar1P
-			distance := math.Pow(math.Phi, power)
-			position := c.camera.Position()
-			target := c.camera.Target()
-
-			target.Sub(&position)
-			distance = maths.ClampFloat64(distance,
-				float64(c.MinDistance), float64(c.MaxDistance))
-			target.SetLength(float32(distance))
-			position.Add(&target)
-			c.camera.LookAt(&position)
-		}
-	}
-}
-
-func (c *Control) updateZoomRelative(zoomDelta float64) {
-	if ortho, ok := c.iCamera.(*camera.Orthographic); ok {
-		orthoZoom := float64(ortho.Zoom()) - updateZoomEpsilon*zoomDelta
-		ortho.SetZoom(float32(orthoZoom))
-	} else {
+	if zoom < 0 {
+		// Lock the target and change the position
+		power := float64(-(zoom + 1)) * updateZoomAbsoluteScalar3P
+		distance := math.Pow(math.Phi, power)
 		position := c.camera.Position()
 		target := c.camera.Target()
-		vdir := position
-		vdir.Sub(&target)
-		dist := float64(vdir.Length()) * (1.0 + zoomDelta*float64(c.ZoomSpeed))
-		dist = maths.ClampFloat64(dist, float64(c.MinDistance), float64(c.MaxDistance))
-		vdir.SetLength(float32(dist))
-		target.Add(&vdir)
+		position.Sub(&target)
+		distance = maths.ClampFloat64(distance,
+			float64(c.MinDistance), float64(c.MaxDistance))
+		position.SetLength(float32(distance))
+		target.Add(&position)
 		c.camera.SetPositionVec(&target)
+	} else {
+		// Just change the field of view
+		fmt.Printf("fov was: %f\n", c.persp.Fov())
+		//c.persp.SetFov()
 	}
 }
