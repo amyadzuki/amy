@@ -14,7 +14,7 @@ import (
 )
 
 type Control struct {
-	MutexMouseCursor sync.Mutex
+	MutexMouseCursor trylock.Mutex
 	iCamera          camera.ICamera
 	IWindow          window.IWindow
 
