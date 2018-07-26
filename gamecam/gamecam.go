@@ -3,6 +3,7 @@ package gamecam
 import (
 	"fmt"
 	"math"
+	"sync"
 
 	"github.com/amyadzuki/amystuff/maths"
 
@@ -12,8 +13,9 @@ import (
 )
 
 type Control struct {
-	iCamera camera.ICamera
-	IWindow window.IWindow
+	MutexMouseCursor sync.Mutex
+	iCamera          camera.ICamera
+	IWindow          window.IWindow
 
 	camera *camera.Camera
 
@@ -43,10 +45,9 @@ type Control struct {
 	EnableKeys bool
 	EnableZoom bool
 
-	enabled           bool
-	ignoreMouseCursor bool
-	rotating          bool
-	subsEvents        int
+	enabled    bool
+	rotating   bool
+	subsEvents int
 }
 
 func New(iCamera camera.ICamera, iWindow window.IWindow) (c *Control) {
@@ -102,7 +103,6 @@ func (c *Control) Init(iCamera camera.ICamera, iWindow window.IWindow) {
 	c.EnableZoom = true
 
 	c.enabled = true
-	c.ignoreMouseCursor = false
 	c.rotating = false
 	c.subsEvents = 0
 
@@ -254,17 +254,28 @@ func (c *Control) onMouseButton(evname string, event interface{}) {
 }
 
 func (c *Control) onMouseCursor(evname string, event interface{}) {
+	locked = c.MutexMouseCursor.TryLock()
+	if !locked {
+		fmt.Print("    ")
+	}
+	fmt.Println("onMouseCursor {")
+	if !locked {
+		fmt.Print("    ")
+	}
+	fmt.Printf("    was: %f, %f\n", c.Xoffset, c.Yoffset)
 	ev := event.(*window.CursorEvent)
 	xOffset, yOffset := ev.Xpos, ev.Ypos
-	if c.ignoreMouseCursor {
-		c.Xoffset, c.Yoffset = 0, 0
-		c.rotateStart.Set(float32(xOffset), float32(yOffset))
-		c.rotateEnd = c.rotateStart
-		c.ignoreMouseCursor = false
+	fmt.Printf("    ofs: %f, %f\n", xOffset, yOffset)
+	if !locked {
+		//c.Xoffset, c.Yoffset = 0, 0
+		//c.rotateStart.Set(float32(xOffset), float32(yOffset))
+		//c.rotateEnd = c.rotateStart
+		fmt.Println("    } // already locked")
 		return
 	}
-	c.ignoreMouseCursor = true
+	defer c.MutexMouseCursor.Unlock()
 	c.Xoffset, c.Yoffset = xOffset, yOffset
+	fmt.Printf("    now: %f, %f\n", c.Xoffset, c.Yoffset)
 	if !c.rotating || !c.Enabled() || c.Mode().Screen() {
 		return
 	}
@@ -278,6 +289,8 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	c.RotateLeft(by / float64(w64) * float64(rotateDelta.X))
 	c.RotateUp(by / float64(h64) * float64(rotateDelta.Y))
 	c.IWindow.SetCursorPos(w64*0.5, h64*0.5)
+	fmt.Printf("    end: %f, %f\n", c.Xoffset, c.Yoffset)
+	fmt.Println("}")
 }
 
 func (c *Control) onMouseScroll(evname string, event interface{}) {
