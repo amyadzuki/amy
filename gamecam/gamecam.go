@@ -94,8 +94,8 @@ func (c *Control) Init(followee Followee, persp *camera.Perspective, iWindow win
 	c.position0 = c.camera.Position()
 	c.target0 = c.camera.Target()
 
-	c.rotateEnd = math32.Vector2{0, 0}
-	c.rotateStart = math32.Vector2{0, 0}
+	c.rotateEnd = math32.Vector2{float32(x), float32(y)}
+	c.rotateStart = math32.Vector2{float32(x), float32(y)}
 
 	c.AzimuthMax = float32(math.Inf(+1))
 	c.AzimuthMin = float32(math.Inf(-1))
