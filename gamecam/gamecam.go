@@ -190,8 +190,8 @@ func (c *Control) ZoomBySteps(step1P, step3P int) {
 }
 
 func (c *Control) ZoomIn(amount float64) {
-	step1P = int(amount * float64(c.ZoomStep1P))
-	step3P = int(amount * float64(c.ZoomStep3P))
+	step1P := int(amount * float64(c.ZoomStep1P))
+	step3P := int(amount * float64(c.ZoomStep3P))
 	c.ZoomBySteps(step1P, step3P)
 }
 
