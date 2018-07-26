@@ -286,7 +286,9 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	var rotateDelta math32.Vector2 // TODO: don't use vectors for this
 	rotateDelta.SubVectors(&c.rotateEnd, &c.rotateStart)
 	fmt.Printf("    dlt: %f, %f\n", rotateDelta.X, rotateDelta.Y)
-	//c.rotateStart = c.rotateEnd
+	if c.TODO {
+		c.rotateStart = c.rotateEnd
+	}
 	width, height := c.IWindow.Size()
 	w64, h64 := float64(width), float64(height)
 	by := 2.0 * math.Pi * float64(c.RotateSpeed)
