@@ -164,17 +164,13 @@ func (c *Control) SetEnabled(enabled bool) (was bool) {
 func (c *Control) SetMode(cm CamMode) (was CamMode) {
 	was = c.mode
 	c.mode = cm
-	fmt.Printf("SetMode(%x => %x) screens: %v => %v", was, cm, was.Screen(), cm.Screen())
 	switch {
 	case was.World() && cm.Screen():
-		fmt.Print(": first case")
 		c.rotating = false
 	case was.Screen() && cm.World():
-		fmt.Print(": second case")
 		c.rotating = true
 		c.rotateStart.Set(float32(c.Xoffset), float32(c.Yoffset))
 	}
-	fmt.Println("; no more cases")
 	return
 }
 
@@ -271,7 +267,9 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	by := 2.0 * math.Pi * float64(c.RotateSpeed)
 	c.RotateLeft(by / float64(w64) * float64(rotateDelta.X))
 	c.RotateUp(by / float64(h64) * float64(rotateDelta.Y))
+	c.rotating = false
 	c.IWindow.SetCursorPos(w64*0.5, h64*0.5)
+	c.rotating = true
 }
 
 func (c *Control) onMouseScroll(evname string, event interface{}) {
