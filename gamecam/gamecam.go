@@ -209,7 +209,13 @@ func (c *Control) ZoomBySteps(step1P, step3P int) {
 			new = -0x71
 		}
 	}
-	c.Zoom = int8(new)
+	zoom := int8(new)
+	c.Zoom = zoom
+	if zoom >= 0 {
+		c.updateZoomAbsolute(zoom)
+	} else {
+		c.updateZoomAbsolute(zoom)
+	}
 }
 
 func (c *Control) ZoomIn(amount float64) {
@@ -298,10 +304,7 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 }
 
 func (c *Control) onMouseScroll(evname string, event interface{}) {
-	fmt.Println("onMouseScroll")
 	if !c.Enabled() || !c.EnableZoom || c.Mode().Screen() {
-		fmt.Println("    >>> Quick return")
-		fmt.Printf("        >>> %v %v %v %x\n", !c.Enabled(), !c.EnableZoom, c.Mode().Screen(), c.Mode())
 		return
 	}
 	ev := event.(*window.ScrollEvent)
@@ -351,13 +354,33 @@ func (c *Control) updateRotate(thetaDelta, phiDelta float64) {
 }
 
 const updateZoomEpsilon float64 = 0.01
+const updateZoomEpsilonNegated float64 = -updateZoomEpsilon
 
-func (c *Control) updateZoom(zoomDelta float64) {
+func (c *Control) updateZoomAbsolute(zoom int8) {
 	if ortho, ok := c.iCamera.(*camera.Orthographic); ok {
-		zoom := float64(ortho.Zoom()) - updateZoomEpsilon*zoomDelta
-		ortho.SetZoom(float32(zoom))
+		orthoZoom := updateZoomEpsilonNegated * float64(zoom)
+		ortho.SetZoom(float32(orthoZoom))
 	} else {
-		fmt.Printf("updateZoom:else: %f\n", zoomDelta)
+		position := c.camera.Position()
+		target := c.camera.Target()
+		vdir := position
+		fmt.Printf("Debug: original Length = %v\n", vdir.Length())
+		return
+		vdir.Sub(&target)
+		fmt.Printf("Debug: final Length = %v\n", vdir.Length())
+		dist := float64(vdir.Length()) * (1.0 + zoomDelta*float64(c.ZoomSpeed))
+		dist = maths.ClampFloat64(dist, float64(c.MinDistance), float64(c.MaxDistance))
+		vdir.SetLength(float32(dist))
+		target.Add(&vdir)
+		c.camera.SetPositionVec(&target)
+	}
+}
+
+func (c *Control) updateZoomRelative(zoomDelta float64) {
+	if ortho, ok := c.iCamera.(*camera.Orthographic); ok {
+		orthoZoom := float64(ortho.Zoom()) - updateZoomEpsilon*zoomDelta
+		ortho.SetZoom(float32(orthoZoom))
+	} else {
 		position := c.camera.Position()
 		target := c.camera.Target()
 		vdir := position
