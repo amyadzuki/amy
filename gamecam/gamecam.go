@@ -1,7 +1,6 @@
 package gamecam
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/amyadzuki/amystuff/maths"
@@ -366,11 +365,11 @@ func (c *Control) updateZoomAbsolute(zoom int8) {
 			power := float64(-(zoom + 1)) * updateZoomAbsoluteScalar
 			distance := math.Pow(math.Phi, power)
 			position := c.camera.Position()
-			target := c.target
+			target := c.camera.Target()
 			position.Sub(&target)
 			distance = maths.ClampFloat64(distance,
 				float64(c.MinDistance), float64(c.MaxDistance))
-			position.SetLength(float32(dist))
+			position.SetLength(float32(distance))
 			target.Add(&position)
 			c.camera.SetPositionVec(&target)
 		} else {
