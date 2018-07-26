@@ -28,17 +28,17 @@ type Control struct {
 	rotateEnd   math32.Vector2
 	rotateStart math32.Vector2
 
-	MaxAzimuthAngle float32
-	MaxDistance     float32
-	MaxPolarAngle   float32
-	MinAzimuthAngle float32
-	MinDistance     float32
-	MinPolarAngle   float32
-	RotateSpeedX    float32
-	RotateSpeedY    float32
-	Xoffset         float32
-	Yoffset         float32
-	ZoomSpeed       float32
+	AzimuthMax   float32
+	AzimuthMin   float32
+	DistanceMax  float32
+	DistanceMin  float32
+	PolarMax     float32
+	PolarMin     float32
+	RotateSpeedX float32
+	RotateSpeedY float32
+	Xoffset      float32
+	Yoffset      float32
+	ZoomSpeed    float32
 
 	mode CamMode
 
@@ -93,12 +93,12 @@ func (c *Control) Init(followee Followee, persp *camera.Perspective, iWindow win
 	c.rotateEnd = math32.Vector2{0, 0}
 	c.rotateStart = math32.Vector2{0, 0}
 
-	c.MaxAzimuthAngle = float32(math.Inf(+1))
-	c.MaxDistance = float32(math.Inf(+1))
-	c.MaxPolarAngle = float32(math.Pi)
-	c.MinAzimuthAngle = float32(math.Inf(-1))
-	c.MinDistance = 0.01
-	c.MinPolarAngle = 0.0
+	c.AzimuthMax = float32(math.Inf(+1))
+	c.AzimuthMin = float32(math.Inf(-1))
+	c.DistanceMax = float32(math.Inf(+1))
+	c.DistanceMin = 0.01
+	c.PolarMax = float32(math.Pi)
+	c.PolarMin = 0.0
 	c.RotateSpeedX = 0.25
 	c.RotateSpeedY = 0.25
 	c.ZoomSpeed = 0.1
@@ -334,7 +334,7 @@ func (c *Control) initPositionAndTarget1P() {
 func (c *Control) initPositionAndTarget3P() {
 	vec := c.Followee.Position()
 	x, y, z := float64(vec.X), float64(vec.Y), float64(vec.Z)
-	z += c.Followee.HeightToEye()
+	z += c.Followee.HeightToEye() * 0 // TODO
 	vec.Z = float32(z)
 	c.camera.LookAt(&vec)
 	dx, dy := c.Followee.FacingNormalized()
@@ -349,13 +349,13 @@ const updateRotatePiMinusEpsilon float64 = math.Pi - updateRotateEpsilon
 
 func (c *Control) updateRotate(thetaDelta, phiDelta float64) {
 	var max, min float64
-	if float64(c.MaxPolarAngle) < updateRotatePiMinusEpsilon {
-		max = float64(c.MaxPolarAngle)
+	if float64(c.PolarMax) < updateRotatePiMinusEpsilon {
+		max = float64(c.PolarMax)
 	} else {
 		max = updateRotatePiMinusEpsilon
 	}
-	if float64(c.MinPolarAngle) > updateRotateEpsilon {
-		min = float64(c.MinPolarAngle)
+	if float64(c.PolarMin) > updateRotateEpsilon {
+		min = float64(c.PolarMin)
 	} else {
 		min = updateRotateEpsilon
 	}
@@ -374,7 +374,7 @@ func (c *Control) updateRotate(thetaDelta, phiDelta float64) {
 	phi := math.Acos(float64(vdir.Y) / radius)
 	theta += thetaDelta
 	phi += phiDelta
-	theta = maths.ClampFloat64(theta, float64(c.MinAzimuthAngle), float64(c.MaxAzimuthAngle))
+	theta = maths.ClampFloat64(theta, float64(c.AzimuthMin), float64(c.AzimuthMax))
 	phi = maths.ClampFloat64(phi, float64(min), float64(max))
 	vdir.X = float32(radius * math.Sin(phi) * math.Sin(theta))
 	vdir.Y = float32(radius * math.Cos(phi))
@@ -407,7 +407,7 @@ func (c *Control) updateZoomAbsolute(zoom int8) {
 		target := c.camera.Target()
 		position.Sub(&target)
 		distance = maths.ClampFloat64(distance,
-			float64(c.MinDistance), float64(c.MaxDistance))
+			float64(c.DistanceMin), float64(c.DistanceMax))
 		position.SetLength(float32(distance))
 		target.Add(&position)
 		c.camera.SetPositionVec(&target)
