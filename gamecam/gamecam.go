@@ -258,7 +258,7 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	xOffset, yOffset := ev.Xpos, ev.Ypos
 	if c.ignoreMouseCursor {
 		c.Xoffset, c.Yoffset = 0, 0
-		c.rotateStart.Set(float32(Xoffset), float32(Yoffset))
+		c.rotateStart.Set(float32(xOffset), float32(yOffset))
 		c.rotateEnd = c.rotateStart
 		c.ignoreMouseCursor = false
 		return
