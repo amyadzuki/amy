@@ -43,9 +43,10 @@ type Control struct {
 	EnableKeys bool
 	EnableZoom bool
 
-	enabled    bool
-	rotating   bool
-	subsEvents int
+	enabled           bool
+	ignoreMouseCursor bool
+	rotating          bool
+	subsEvents        int
 }
 
 func New(iCamera camera.ICamera, iWindow window.IWindow) (c *Control) {
@@ -101,6 +102,7 @@ func (c *Control) Init(iCamera camera.ICamera, iWindow window.IWindow) {
 	c.EnableZoom = true
 
 	c.enabled = true
+	c.ignoreMouseCursor = false
 	c.rotating = false
 	c.subsEvents = 0
 
@@ -252,6 +254,9 @@ func (c *Control) onMouseButton(evname string, event interface{}) {
 }
 
 func (c *Control) onMouseCursor(evname string, event interface{}) {
+	if c.ignoreMouseCursor {
+		return
+	}
 	ev := event.(*window.CursorEvent)
 	xOffset, yOffset := ev.Xpos, ev.Ypos
 	c.Xoffset, c.Yoffset = xOffset, yOffset
@@ -267,9 +272,9 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	by := 2.0 * math.Pi * float64(c.RotateSpeed)
 	c.RotateLeft(by / float64(w64) * float64(rotateDelta.X))
 	c.RotateUp(by / float64(h64) * float64(rotateDelta.Y))
-	c.rotating = false
+	c.ignoreMouseCursor = true
 	c.IWindow.SetCursorPos(w64*0.5, h64*0.5)
-	c.rotating = true
+	c.ignoreMouseCursor = false
 }
 
 func (c *Control) onMouseScroll(evname string, event interface{}) {
