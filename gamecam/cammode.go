@@ -10,6 +10,10 @@ type CamMode struct {
 
 var ImplScreen func(CamMode) bool = nil
 
+func (cm *CamMode) Init(mask uint8) {
+	cm.Uint8 = bitfield.Uint8(mask)
+}
+
 func (cm CamMode) Screen() bool {
 	if ImplScreen != nil {
 		return ImplScreen(cm)
