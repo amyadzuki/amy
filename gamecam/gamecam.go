@@ -3,13 +3,14 @@ package gamecam
 import (
 	"fmt"
 	"math"
-	"sync"
 
 	"github.com/amyadzuki/amystuff/maths"
 
 	"github.com/g3n/engine/camera"
 	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/window"
+
+	"github.com/LK4D4/trylock"
 )
 
 type Control struct {
