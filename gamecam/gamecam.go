@@ -174,7 +174,6 @@ func (c *Control) SetMode(cm CamMode) (was CamMode) {
 		c.rotating = false
 	case was.Screen() && cm.World():
 		c.rotating = true
-		c.rotateStart.Set(float32(c.Xoffset), float32(c.Yoffset))
 	}
 	return
 }
@@ -257,6 +256,7 @@ func (c *Control) onMouseButton(evname string, event interface{}) {
 }
 
 func (c *Control) onMouseCursor(evname string, event interface{}) {
+	defer c.rotateStart.Set(float32(c.Xoffset), float32(c.Yoffset))
 	locked := c.mutexMouseCursor.TryLock()
 	if !locked {
 		fmt.Print("    ")
