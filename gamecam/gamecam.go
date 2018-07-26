@@ -62,6 +62,7 @@ func (c *Control) Dispose() {
 	c.Window.UnsubscribeID(window.OnMouseUp, &c.subsEvents)
 	c.Window.UnsubscribeID(window.OnMouseDown, &c.subsEvents)
 	c.Window.UnsubscribeID(window.OnScroll, &c.subsEvents)
+	c.Window.UnsubscribeID(window.OnKeyUp, &c.subsEvents)
 	c.Window.UnsubscribeID(window.OnKeyDown, &c.subsEvents)
 }
 
@@ -106,6 +107,7 @@ func (c *Control) Init(icamera camera.ICamera, iwindow window.IWindow) {
 	c.Window.SubscribeID(window.OnMouseUp, &c.subsEvents, c.onMouseButton)
 	c.Window.SubscribeID(window.OnMouseDown, &c.subsEvents, c.onMouseButton)
 	c.Window.SubscribeID(window.OnScroll, &c.subsEvents, c.onMouseScroll)
+	c.Window.SubscribeID(window.OnKeyUp, &c.subsEvents, c.onKeyboardKey)
 	c.Window.SubscribeID(window.OnKeyDown, &c.subsEvents, c.onKeyboardKey)
 	fmt.Println("Subscribed!")
 	return
