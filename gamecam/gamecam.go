@@ -1,6 +1,8 @@
 package gamecam
 
 import (
+	"fmt"
+
 	"github.com/amyadzuki/amystuff/maths"
 
 	"github.com/g3n/engine/camera"
