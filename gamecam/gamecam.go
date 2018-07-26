@@ -300,9 +300,9 @@ func (c *Control) updateRotate(thetaDelta, phiDelta float64) {
 	phi += phiDelta
 	theta = maths.ClampFloat64(theta, float64(c.MinAzimuthAngle), float64(c.MaxAzimuthAngle))
 	phi = maths.ClampFloat64(phi, float64(min), float64(max))
-	vdir.X = radius * math.Sin(phi) * math.Sin(theta)
-	vdir.Y = radius * math.Cos(phi)
-	vdir.Z = radius * math.Sin(phi) * math.Cos(theta)
+	vdir.X = float32(radius * math.Sin(phi) * math.Sin(theta))
+	vdir.Y = float32(radius * math.Cos(phi))
+	vdir.Z = float32(radius * math.Sin(phi) * math.Cos(theta))
 	vdir.ApplyQuaternion(&quatInverse)
 	position = target
 	position.Add(&vdir)
