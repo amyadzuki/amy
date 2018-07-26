@@ -121,8 +121,8 @@ func (c *Control) Mode() CamMode {
 }
 
 func (c *Control) Reset() {
-	c.SetMode(c.Mode().ClrCopy(WorldOverrides))
-	c.SetMode(c.Mode().SetCopy(DefaultToScreen))
+	c.SetMode(CamMode{c.Mode().ClrCopy(WorldOverrides)})
+	c.SetMode(CamMode{c.Mode().SetCopy(DefaultToScreen)})
 	c.camera.SetPositionVec(&c.position0)
 	c.camera.LookAt(&c.target0)
 }
@@ -147,8 +147,8 @@ func (c *Control) SetEnabled(enabled bool) (was bool) {
 	was = c.enabled
 	c.enabled = enabled
 	if !enabled {
-		c.SetMode(c.Mode().ClrCopy(WorldOverrides))
-		c.SetMode(c.Mode().SetCopy(DefaultToScreen))
+		c.SetMode(CamMode{c.Mode().ClrCopy(WorldOverrides)})
+		c.SetMode(CamMode{c.Mode().SetCopy(DefaultToScreen)})
 	}
 	return
 }
@@ -208,9 +208,9 @@ func (c *Control) onMouseButton(evname string, event interface{}) {
 	}
 	switch ev.Action {
 	case window.Press:
-		c.SetMode(c.Mode().SetCopy(MiddleMouseHeld))
+		c.SetMode(CamMode{c.Mode().SetCopy(MiddleMouseHeld)})
 	case window.Release:
-		c.SetMode(c.Mode().ClrCopy(MiddleMouseHeld))
+		c.SetMode(CamMode{c.Mode().ClrCopy(MiddleMouseHeld)})
 	}
 }
 
@@ -222,12 +222,13 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 		return
 	}
 	c.rotateEnd.Set(xOffset, yOffset)
-	c.rotateDelta.SubVectors(&c.rotateEnd, &c.rotateStart)
+	var rotateDelta math32.Vector2 // TODO: don't use vectors for this
+	rotateDelta.SubVectors(&c.rotateEnd, &c.rotateStart)
 	c.rotateStart = c.rotateEnd
 	width, height := c.Window.Size()
 	by := 2.0 * math.Pi * float64(c.RotateSpeed)
-	c.RotateLeft(by / float64(width) * float64(c.rotateDelta.X))
-	c.RotateUp(by / float64(height) * float64(c.rotateDelta.Y))
+	c.RotateLeft(by / float64(width) * float64(rotateDelta.X))
+	c.RotateUp(by / float64(height) * float64(rotateDelta.Y))
 }
 
 func (c *Control) onMouseScroll(evname string, event interface{}) {
@@ -247,14 +248,14 @@ func (c *Control) onKeyboardKey(evname string, event interface{}) {
 	case window.KeyLeftAlt:
 		switch ev.Action {
 		case window.Press:
-			c.SetMode(c.Mode().SetCopy(ScreenButtonHeld))
+			c.SetMode(CamMode{c.Mode().SetCopy(ScreenButtonHeld)})
 		case window.Release:
-			c.SetMode(c.Mode().ClrCopy(ScreenButtonHeld))
+			c.SetMode(CamMode{c.Mode().ClrCopy(ScreenButtonHeld)})
 		}
 	case window.KeyEscape:
 		switch ev.Action {
 		case window.Press:
-			c.SetMode(c.Mode().XorCopy(ScreenToggleOn))
+			c.SetMode(CamMode{c.Mode().XorCopy(ScreenToggleOn)})
 		case window.Release:
 		}
 	case window.KeyHome:
