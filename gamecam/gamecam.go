@@ -342,6 +342,7 @@ func (c *Control) initPositionAndTarget3P() {
 	vec.X, vec.Y = float32(x-dx), float32(y-dy)
 	vec.Z = float32(z + math.Phi)
 	c.camera.SetPositionVec(vec.Normalize())
+	c.persp.SetFov(65)
 }
 
 const updateRotateEpsilon float64 = 0.01
@@ -380,16 +381,23 @@ func (c *Control) updateRotate(thetaDelta, phiDelta float64) {
 	vdir.Y = float32(radius * math.Cos(phi))
 	vdir.Z = float32(radius * math.Sin(phi) * math.Cos(theta))
 	vdir.ApplyQuaternion(&quatInverse)
-	position = target
-	position.Add(&vdir)
-	c.camera.SetPositionVec(&position)
-	c.camera.LookAt(&target)
+	if c.Zoom < 0 {
+		position = target
+		position.Add(&vdir)
+		c.camera.SetPositionVec(&position)
+		c.camera.LookAt(&target)
+	} else {
+		target = position
+		target.Sub(&vdir)
+		c.camera.SetPositionVec(&position)
+		c.camera.LookAt(&target)
+	}
 }
 
 const updateZoomEpsilon float64 = 0.01
 const updateZoomEpsilonNegated float64 = -updateZoomEpsilon
 const updateZoomAbsoluteScalar1P float64 = 1.0 / 16.0
-const updateZoomAbsoluteScalar3P float64 = 1.0 / 16.0
+const updateZoomAbsoluteScalar3P float64 = 1.0 / 128.0
 
 func (c *Control) updateZoomAbsolute(zoom int8) {
 	if zoom < 0 {
@@ -406,7 +414,7 @@ func (c *Control) updateZoomAbsolute(zoom int8) {
 		c.camera.SetPositionVec(&target)
 	} else {
 		// Just change the field of view
-		fmt.Printf("fov was: %f\n", c.persp.Fov())
-		//c.persp.SetFov()
+		scalar := 1.0 - float64(zoom)*updateZoomAbsoluteScalar1P
+		c.persp.SetFov(65.0 * scalar)
 	}
 }
