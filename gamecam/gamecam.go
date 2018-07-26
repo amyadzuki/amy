@@ -211,10 +211,36 @@ func (c *Control) ZoomOut(amount float64) {
 	c.ZoomIn(-amount)
 }
 
+func (c *Control) onKeyboardKey(evname string, event interface{}) {
+	if !c.Enabled() || !c.EnableKeys {
+		return
+	}
+	ev := event.(*window.KeyEvent)
+	switch ev.Keycode {
+	case window.KeyLeftAlt:
+		switch ev.Action {
+		case window.Press:
+			c.SetMode(CamMode{c.Mode().SetCopy(ScreenButtonHeld)})
+		case window.Release:
+			c.SetMode(CamMode{c.Mode().ClrCopy(ScreenButtonHeld)})
+		}
+	case window.KeyEscape:
+		switch ev.Action {
+		case window.Press:
+			c.SetMode(CamMode{c.Mode().XorCopy(ScreenToggleOn)})
+		case window.Release:
+		}
+	case window.KeyHome:
+		switch ev.Action {
+		case window.Press:
+			// c.Snap() // TODO:
+		case window.Release:
+		}
+	}
+}
+
 func (c *Control) onMouseButton(evname string, event interface{}) {
-	fmt.Println("onMouseButton")
 	if !c.Enabled() {
-		fmt.Println("    >>> Quick return")
 		return
 	}
 	ev := event.(*window.MouseEvent)
@@ -230,13 +256,10 @@ func (c *Control) onMouseButton(evname string, event interface{}) {
 }
 
 func (c *Control) onMouseCursor(evname string, event interface{}) {
-	fmt.Println("onMouseCursor")
 	ev := event.(*window.CursorEvent)
 	xOffset, yOffset := ev.Xpos, ev.Ypos
 	c.Xoffset, c.Yoffset = xOffset, yOffset
 	if !c.rotating || !c.Enabled() || c.Mode().Screen() {
-		fmt.Println("    >>> Quick return")
-		fmt.Printf("        >>> %v %v %v %x\n", !c.rotating, !c.Enabled(), c.Mode().Screen(), c.Mode())
 		return
 	}
 	c.rotateEnd.Set(xOffset, yOffset)
@@ -260,41 +283,10 @@ func (c *Control) onMouseScroll(evname string, event interface{}) {
 	c.ZoomOut(float64(ev.Yoffset))
 }
 
-func (c *Control) onKeyboardKey(evname string, event interface{}) {
-	fmt.Println("onKeyboardKey")
-	if !c.Enabled() || !c.EnableKeys {
-		fmt.Println("    >>> Quick return")
-		return
-	}
-	ev := event.(*window.KeyEvent)
-	switch ev.Keycode {
-	case window.KeyLeftAlt:
-		switch ev.Action {
-		case window.Press:
-			c.SetMode(CamMode{c.Mode().SetCopy(ScreenButtonHeld)})
-		case window.Release:
-			c.SetMode(CamMode{c.Mode().ClrCopy(ScreenButtonHeld)})
-		}
-	case window.KeyEscape:
-		switch ev.Action {
-		case window.Press:
-			c.SetMode(CamMode{c.Mode().XorCopy(ScreenToggleOn)})
-		case window.Release:
-		}
-	case window.KeyHome:
-		switch ev.Action {
-		case window.Press:
-			//          c.Snap() // TODO:
-		case window.Release:
-		}
-	}
-}
-
 const updateRotateEpsilon float64 = 0.01
 const updateRotatePiMinusEpsilon float64 = math.Pi - updateRotateEpsilon
 
 func (c *Control) updateRotate(thetaDelta, phiDelta float64) {
-	fmt.Printf("updateRotate: %f, %f\n", thetaDelta, phiDelta)
 	var max, min float64
 	if float64(c.MaxPolarAngle) < updateRotatePiMinusEpsilon {
 		max = float64(c.MaxPolarAngle)
