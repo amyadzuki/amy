@@ -44,20 +44,8 @@ type Control struct {
 
 	enabled    bool
 	rotating   bool
-	subsEvents bool
+	subsEvents int
 }
-
-const ModeWorld uint8 = 0
-const (
-	// Controlling the screen for another reason, such as in a menu
-	ModeScreenOther uint8 = iota << 0
-
-	// Controlling the screen because a key is held
-	ModeScreenHeld
-
-	// Controlling the screen because a key was toggled on
-	ModeScreenToggled
-)
 
 func New(icamera camera.ICamera, iwindow window.IWindow) (c *Control) {
 	c = new(Control)
