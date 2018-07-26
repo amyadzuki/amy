@@ -1,6 +1,7 @@
 package gamecam
 
 import (
+	"fmt"
 	"math"
 
 	"github.com/amyadzuki/amystuff/maths"
@@ -127,14 +128,6 @@ func (c *Control) Init(persp *camera.Perspective, iWindow window.IWindow) {
 
 func (c *Control) Mode() CamMode {
 	return c.mode
-}
-
-func (c *Control) Target() math32.Vector3 {
-	if c.zoom >= 0 {
-		// First-person camera
-	} else {
-		// Third-person camera
-	}
 }
 
 func (c *Control) Reset() {
