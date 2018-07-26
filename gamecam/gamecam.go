@@ -293,9 +293,9 @@ func (c *Control) updateRotate(thetaDelta, phiDelta float64) {
 	quatInverse := quat
 	quatInverse.Inverse()
 	vdir.ApplyQuaternion(&quat)
-	radius := vdir.Length()
+	radius := float64(vdir.Length())
 	theta := float64(math32.Atan2(vdir.X, vdir.Z)) // TODO: 64-bit
-	phi := float64(math32.Acos(vdir.Y / radius))   // TODO: 64-bit
+	phi := math.Acos(float64(vdir.Y) / radius)
 	theta += thetaDelta
 	phi += phiDelta
 	theta = maths.ClampFloat64(theta, float64(c.MinAzimuthAngle), float64(c.MaxAzimuthAngle))
@@ -314,14 +314,14 @@ const updateZoomEpsilon float64 = 0.01
 
 func (c *Control) updateZoom(zoomDelta float64) {
 	if ortho, ok := c.icamera.(*camera.Orthographic); ok {
-		zoom := ortho.Zoom() - updateZoomEpsilon*zoomDelta
-		ortho.SetZoom(zoom)
+		zoom := float64(ortho.Zoom()) - updateZoomEpsilon*zoomDelta
+		ortho.SetZoom(float32(zoom))
 	} else {
 		position := c.camera.Position()
 		target := c.camera.Target()
 		vdir := position
 		vdir.Sub(&target)
-		dist := float64(vdir.Length()) * (1.0 + zoomDelta*c.ZoomSpeed/10.0)
+		dist := float64(vdir.Length()) * (1.0 + zoomDelta*float64(c.ZoomSpeed)/10.0)
 		dist = maths.ClampFloat64(dist, float64(c.MinDistance), float64(c.MaxDistance))
 		vdir.SetLength(float32(dist))
 		target.Add(&vdir)
