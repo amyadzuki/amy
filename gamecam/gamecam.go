@@ -33,7 +33,8 @@ type Control struct {
 	MinAzimuthAngle float32
 	MinDistance     float32
 	MinPolarAngle   float32
-	RotateSpeed     float32
+	RotateSpeedX    float32
+	RotateSpeedY    float32
 	Xoffset         float32
 	Yoffset         float32
 	ZoomSpeed       float32
@@ -46,6 +47,7 @@ type Control struct {
 
 	EnableKeys      bool
 	EnableZoom      bool
+	HideMouseCursor bool
 	SnapMouseCursor bool
 
 	enabled    bool
@@ -93,7 +95,8 @@ func (c *Control) Init(iCamera camera.ICamera, iWindow window.IWindow) {
 	c.MinAzimuthAngle = float32(math.Inf(-1))
 	c.MinDistance = 0.01
 	c.MinPolarAngle = 0.0
-	c.RotateSpeed = 1.0
+	c.RotateSpeedX = 0.1
+	c.RotateSpeedY = 0.1
 	c.ZoomSpeed = 0.1
 
 	c.mode.Init(DefaultToScreen)
@@ -104,6 +107,7 @@ func (c *Control) Init(iCamera camera.ICamera, iWindow window.IWindow) {
 
 	c.EnableKeys = true
 	c.EnableZoom = true
+	c.HideMouseCursor = true
 	c.SnapMouseCursor = true
 
 	c.enabled = true
@@ -173,8 +177,14 @@ func (c *Control) SetMode(cm CamMode) (was CamMode) {
 	switch {
 	case was.World() && cm.Screen():
 		c.rotating = false
+		if c.HideMouseCursor {
+			c.IWindow.SetInputMode(window.CursorMode, window.CursorNormal)
+		}
 	case was.Screen() && cm.World():
 		c.rotating = true
+		if c.HideMouseCursor {
+			c.IWindow.SetInputMode(window.CursorMode, window.CursorHidden)
+		}
 	}
 	return
 }
@@ -298,9 +308,9 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 		c.rotateStart = c.rotateEnd
 	}
 	fmt.Printf("  ->Sta: %f, %f\n", c.rotateStart.X, c.rotateStart.Y)
-	by := 2.0 * math.Pi * float64(c.RotateSpeed)
-	c.RotateLeft(by / float64(w64) * float64(rotateDelta.X))
-	c.RotateUp(by / float64(h64) * float64(rotateDelta.Y))
+	by := 2.0 * math.Pi
+	c.RotateLeft(by * float64(c.RotateSpeedX) / float64(w64) * float64(rotateDelta.X))
+	c.RotateUp(by * float64(c.RotateSpeedY) / float64(h64) * float64(rotateDelta.Y))
 	fmt.Printf("    end: %f, %f\n", c.Xoffset, c.Yoffset)
 	fmt.Println("}")
 }
