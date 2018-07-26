@@ -53,6 +53,10 @@ func New(icamera camera.ICamera, iwindow window.IWindow) (c *Control) {
 	return
 }
 
+func (c *Control) DefaultToScreen() bool {
+	return c.Mode().All(DefaultToScreen)
+}
+
 func (c *Control) Dispose() {
 	c.Window.UnsubscribeID(window.OnCursor, &c.subsEvents)
 	c.Window.UnsubscribeID(window.OnMouseUp, &c.subsEvents)
@@ -132,6 +136,16 @@ func (c *Control) RotateRight(amount float64) {
 
 func (c *Control) RotateUp(amount float64) {
 	c.RotateDown(-amount)
+}
+
+func (c *Control) SetDefaultToScreen(defaultToScreen bool) (was bool) {
+	wasMode := c.Mode()
+	if defaultToScreen {
+		c.SetMode(CamMode{wasMode.SetCopy(DefaultToScreen)})
+	} else {
+		c.SetMode(CamMode{wasMode.ClrCopy(DefaultToScreen)})
+	}
+	was = wasMode.All(DefaultToScreen)
 }
 
 func (c *Control) SetEnabled(enabled bool) (was bool) {
