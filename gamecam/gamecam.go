@@ -256,7 +256,6 @@ func (c *Control) onMouseButton(evname string, event interface{}) {
 }
 
 func (c *Control) onMouseCursor(evname string, event interface{}) {
-	defer c.rotateStart.Set(float32(c.Xoffset), float32(c.Yoffset))
 	locked := c.mutexMouseCursor.TryLock()
 	if !locked {
 		fmt.Print("    ")
@@ -277,6 +276,7 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 		return
 	}
 	defer c.mutexMouseCursor.Unlock()
+	defer c.rotateStart.Set(float32(c.Xoffset), float32(c.Yoffset))
 	c.Xoffset, c.Yoffset = xOffset, yOffset
 	fmt.Printf("    now: %f, %f\n", c.Xoffset, c.Yoffset)
 	if !c.rotating || !c.Enabled() || c.Mode().Screen() {
