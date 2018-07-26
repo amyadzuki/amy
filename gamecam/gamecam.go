@@ -12,9 +12,10 @@ import (
 )
 
 type Control struct {
-	camera  *camera.Camera
-	icamera camera.ICamera
-	Window  window.IWindow
+	iCamera camera.ICamera
+	IWindow window.IWindow
+
+	camera *camera.Camera
 
 	position0 math32.Vector3
 	target0   math32.Vector3
@@ -47,9 +48,9 @@ type Control struct {
 	subsEvents int
 }
 
-func New(icamera camera.ICamera, iwindow window.IWindow) (c *Control) {
+func New(iCamera camera.ICamera, iWindow window.IWindow) (c *Control) {
 	c = new(Control)
-	c.Init(icamera, iwindow)
+	c.Init(iCamera, iWindow)
 	return
 }
 
@@ -58,22 +59,22 @@ func (c *Control) DefaultToScreen() bool {
 }
 
 func (c *Control) Dispose() {
-	c.Window.UnsubscribeID(window.OnCursor, &c.subsEvents)
-	c.Window.UnsubscribeID(window.OnMouseUp, &c.subsEvents)
-	c.Window.UnsubscribeID(window.OnMouseDown, &c.subsEvents)
-	c.Window.UnsubscribeID(window.OnScroll, &c.subsEvents)
-	c.Window.UnsubscribeID(window.OnKeyUp, &c.subsEvents)
-	c.Window.UnsubscribeID(window.OnKeyDown, &c.subsEvents)
+	c.IWindow.UnsubscribeID(window.OnCursor, &c.subsEvents)
+	c.IWindow.UnsubscribeID(window.OnMouseUp, &c.subsEvents)
+	c.IWindow.UnsubscribeID(window.OnMouseDown, &c.subsEvents)
+	c.IWindow.UnsubscribeID(window.OnScroll, &c.subsEvents)
+	c.IWindow.UnsubscribeID(window.OnKeyUp, &c.subsEvents)
+	c.IWindow.UnsubscribeID(window.OnKeyDown, &c.subsEvents)
 }
 
 func (c *Control) Enabled() bool {
 	return c.enabled
 }
 
-func (c *Control) Init(icamera camera.ICamera, iwindow window.IWindow) {
-	c.camera = icamera.GetCamera()
-	c.icamera = icamera
-	c.Window = iwindow
+func (c *Control) Init(iCamera camera.ICamera, iWindow window.IWindow) {
+	c.iCamera = iCamera
+	c.IWindow = iWindow
+	c.camera = iCamera.GetCamera()
 
 	c.position0 = c.camera.Position()
 	c.target0 = c.camera.Target()
@@ -103,13 +104,12 @@ func (c *Control) Init(icamera camera.ICamera, iwindow window.IWindow) {
 	c.rotating = false
 	c.subsEvents = 0
 
-	c.Window.SubscribeID(window.OnCursor, &c.subsEvents, c.onMouseCursor)
-	c.Window.SubscribeID(window.OnMouseUp, &c.subsEvents, c.onMouseButton)
-	c.Window.SubscribeID(window.OnMouseDown, &c.subsEvents, c.onMouseButton)
-	c.Window.SubscribeID(window.OnScroll, &c.subsEvents, c.onMouseScroll)
-	c.Window.SubscribeID(window.OnKeyUp, &c.subsEvents, c.onKeyboardKey)
-	c.Window.SubscribeID(window.OnKeyDown, &c.subsEvents, c.onKeyboardKey)
-	fmt.Println("Subscribed!")
+	c.IWindow.SubscribeID(window.OnCursor, &c.subsEvents, c.onMouseCursor)
+	c.IWindow.SubscribeID(window.OnMouseUp, &c.subsEvents, c.onMouseButton)
+	c.IWindow.SubscribeID(window.OnMouseDown, &c.subsEvents, c.onMouseButton)
+	c.IWindow.SubscribeID(window.OnScroll, &c.subsEvents, c.onMouseScroll)
+	c.IWindow.SubscribeID(window.OnKeyUp, &c.subsEvents, c.onKeyboardKey)
+	c.IWindow.SubscribeID(window.OnKeyDown, &c.subsEvents, c.onKeyboardKey)
 	return
 }
 
@@ -266,10 +266,12 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	var rotateDelta math32.Vector2 // TODO: don't use vectors for this
 	rotateDelta.SubVectors(&c.rotateEnd, &c.rotateStart)
 	c.rotateStart = c.rotateEnd
-	width, height := c.Window.Size()
+	width, height := c.IWindow.Size()
+	w64, h64 := float64(width), float64(height)
 	by := 2.0 * math.Pi * float64(c.RotateSpeed)
-	c.RotateLeft(by / float64(width) * float64(rotateDelta.X))
-	c.RotateUp(by / float64(height) * float64(rotateDelta.Y))
+	c.RotateLeft(by / float64(w64) * float64(rotateDelta.X))
+	c.RotateUp(by / float64(h64) * float64(rotateDelta.Y))
+	c.IWindow.SetCursorPos(w64*0.5, h64*0.5)
 }
 
 func (c *Control) onMouseScroll(evname string, event interface{}) {
@@ -328,7 +330,7 @@ func (c *Control) updateRotate(thetaDelta, phiDelta float64) {
 const updateZoomEpsilon float64 = 0.01
 
 func (c *Control) updateZoom(zoomDelta float64) {
-	if ortho, ok := c.icamera.(*camera.Orthographic); ok {
+	if ortho, ok := c.iCamera.(*camera.Orthographic); ok {
 		zoom := float64(ortho.Zoom()) - updateZoomEpsilon*zoomDelta
 		ortho.SetZoom(float32(zoom))
 	} else {
