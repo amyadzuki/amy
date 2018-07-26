@@ -80,6 +80,11 @@ func (c *Control) Enabled() bool {
 }
 
 func (c *Control) Init(followee Followee, persp *camera.Perspective, iWindow window.IWindow) {
+	width, height := c.IWindow.Size()
+	w64, h64 := float64(width), float64(height)
+	x, y := w64*0.5, h64*0.5
+	c.IWindow.SetCursorPos(x, y)
+
 	c.Followee = followee
 
 	c.IWindow = iWindow
@@ -108,6 +113,7 @@ func (c *Control) Init(followee Followee, persp *camera.Perspective, iWindow win
 	c.Zoom = -0x21
 	c.ZoomStep1P = 0x04
 	c.ZoomStep3P = 0x04
+	c.updateZoomAbsolute()
 
 	c.EnableKeys = true
 	c.EnableZoom = true
@@ -219,7 +225,7 @@ func (c *Control) ZoomBySteps(step1P, step3P int) {
 	c.Zoom = zoom
 	switch init {
 	case 0:
-		c.updateZoomAbsolute(zoom)
+		c.updateZoomAbsolute()
 	case 1:
 		c.initPositionAndTarget1P()
 	case 3:
@@ -396,9 +402,10 @@ func (c *Control) updateRotate(thetaDelta, phiDelta float64) {
 const updateZoomEpsilon float64 = 0.01
 const updateZoomEpsilonNegated float64 = -updateZoomEpsilon
 const updateZoomAbsoluteScalar1P float64 = 1.0 / 16.0
-const updateZoomAbsoluteScalar3P float64 = 1.0 / 128.0
+const updateZoomAbsoluteScalar3P float64 = 1.0 / 16.0
 
-func (c *Control) updateZoomAbsolute(zoom int8) {
+func (c *Control) updateZoomAbsolute() {
+	zoom := c.Zoom
 	if zoom < 0 {
 		// Lock the target and change the position
 		power := float64(-(zoom + 1)) * updateZoomAbsoluteScalar3P
@@ -413,7 +420,8 @@ func (c *Control) updateZoomAbsolute(zoom int8) {
 		c.camera.SetPositionVec(&target)
 	} else {
 		// Just change the field of view
-		scalar := 1.0 - float64(zoom)*updateZoomAbsoluteScalar1P
+		power := float64(zoom) * updateZoomAbsoluteScalar3P
+		scalar := 1.0 / math.Pow(math.Phi, power)
 		c.persp.SetFov(float32(65.0 * scalar))
 	}
 }
