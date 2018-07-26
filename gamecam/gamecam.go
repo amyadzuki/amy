@@ -20,8 +20,8 @@ type Control struct {
 	position0 math32.Vector3
 	target0   math32.Vector3
 
-	rotateStart math32.Vector2
 	rotateEnd   math32.Vector2
+	rotateStart math32.Vector2
 
 	MaxAzimuthAngle float32
 	MaxDistance     float32
@@ -80,8 +80,8 @@ func (c *Control) Init(iCamera camera.ICamera, iWindow window.IWindow) {
 	c.position0 = c.camera.Position()
 	c.target0 = c.camera.Target()
 
-	c.rotateStart = math32.Vector2{0, 0}
 	c.rotateEnd = math32.Vector2{0, 0}
+	c.rotateStart = math32.Vector2{0, 0}
 
 	c.MaxAzimuthAngle = float32(math.Inf(+1))
 	c.MaxDistance = float32(math.Inf(+1))
@@ -266,7 +266,7 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	c.rotateEnd.Set(xOffset, yOffset)
 	var rotateDelta math32.Vector2 // TODO: don't use vectors for this
 	rotateDelta.SubVectors(&c.rotateEnd, &c.rotateStart)
-	c.rotateStart = c.rotateEnd
+	//c.rotateStart = c.rotateEnd
 	width, height := c.IWindow.Size()
 	w64, h64 := float64(width), float64(height)
 	by := 2.0 * math.Pi * float64(c.RotateSpeed)
@@ -275,6 +275,7 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	c.ignoreMouseCursor = true
 	c.IWindow.SetCursorPos(w64*0.5, h64*0.5)
 	c.ignoreMouseCursor = false
+	c.rotateStart.Set(float32(c.Xoffset), float32(c.Yoffset))
 }
 
 func (c *Control) onMouseScroll(evname string, event interface{}) {
