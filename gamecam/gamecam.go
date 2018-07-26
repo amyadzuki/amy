@@ -147,13 +147,17 @@ func (c *Control) SetEnabled(enabled bool) (was bool) {
 func (c *Control) SetMode(cm CamMode) (was CamMode) {
 	was = c.mode
 	c.mode = cm
+	fmt.Printf("SetMode(%x)", cm)
 	switch {
 	case was.World() && cm.Screen():
+		fmt.Print(": first case")
 		c.rotating = false
 	case was.Screen() && cm.World():
+		fmt.Print(": second case")
 		c.rotating = true
 		c.rotateStart.Set(float32(c.Xoffset), float32(c.Yoffset))
 	}
+	fmt.Println("; no more cases")
 	return
 }
 
