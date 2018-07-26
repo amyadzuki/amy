@@ -14,6 +14,7 @@ import (
 )
 
 type Control struct {
+	TODO bool
 	iCamera camera.ICamera
 	IWindow window.IWindow
 
@@ -291,7 +292,9 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	by := 2.0 * math.Pi * float64(c.RotateSpeed)
 	c.RotateLeft(by / float64(w64) * float64(rotateDelta.X))
 	c.RotateUp(by / float64(h64) * float64(rotateDelta.Y))
-	c.IWindow.SetCursorPos(w64*0.5, h64*0.5)
+	if !c.TODO {
+		c.IWindow.SetCursorPos(w64*0.5, h64*0.5)
+	}
 	fmt.Printf("    end: %f, %f\n", c.Xoffset, c.Yoffset)
 	fmt.Println("}")
 }
