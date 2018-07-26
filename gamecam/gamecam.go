@@ -80,14 +80,13 @@ func (c *Control) Enabled() bool {
 }
 
 func (c *Control) Init(followee Followee, persp *camera.Perspective, iWindow window.IWindow) {
-	width, height := iWindow.Size()
-	w64, h64 := float64(width), float64(height)
-	x, y := w64*0.5, h64*0.5
-	c.IWindow.SetCursorPos(x, y)
-
 	c.Followee = followee
 
 	c.IWindow = iWindow
+	width, height := c.IWindow.Size()
+	w64, h64 := float64(width), float64(height)
+	x, y := w64*0.5, h64*0.5
+	c.IWindow.SetCursorPos(x, y)
 
 	c.camera = persp.GetCamera()
 	c.persp = persp
