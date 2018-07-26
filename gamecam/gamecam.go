@@ -95,8 +95,8 @@ func (c *Control) Init(iCamera camera.ICamera, iWindow window.IWindow) {
 	c.MinAzimuthAngle = float32(math.Inf(-1))
 	c.MinDistance = 0.01
 	c.MinPolarAngle = 0.0
-	c.RotateSpeedX = 0.1
-	c.RotateSpeedY = 0.1
+	c.RotateSpeedX = 0.25
+	c.RotateSpeedY = 0.25
 	c.ZoomSpeed = 0.1
 
 	c.mode.Init(DefaultToScreen)
@@ -267,37 +267,22 @@ func (c *Control) onMouseButton(evname string, event interface{}) {
 }
 
 func (c *Control) onMouseCursor(evname string, event interface{}) {
-	locked := c.mutexMouseCursor.TryLock()
-	if !locked {
-		fmt.Print("    ")
-	}
-	fmt.Println("onMouseCursor {")
-	if !locked {
-		fmt.Print("    ")
-	}
-	fmt.Printf("    was: %f, %f\n", c.Xoffset, c.Yoffset)
-	ev := event.(*window.CursorEvent)
-	xOffset, yOffset := ev.Xpos, ev.Ypos
-	fmt.Printf("    ofs: %f, %f\n", xOffset, yOffset)
-	if !locked {
-		//c.Xoffset, c.Yoffset = 0, 0
-		//c.rotateStart.Set(float32(xOffset), float32(yOffset))
-		//c.rotateEnd = c.rotateStart
-		fmt.Println("    } // already locked")
+	if !c.mutexMouseCursor.TryLock() {
 		return
 	}
 	defer c.mutexMouseCursor.Unlock()
+
+	ev := event.(*window.CursorEvent)
+	xOffset, yOffset := ev.Xpos, ev.Ypos
 	c.Xoffset, c.Yoffset = xOffset, yOffset
-	fmt.Printf("    now: %f, %f\n", c.Xoffset, c.Yoffset)
+
 	if !c.rotating || !c.Enabled() || c.Mode().Screen() {
 		return
 	}
+
 	c.rotateEnd.Set(xOffset, yOffset)
 	var rotateDelta math32.Vector2 // TODO: don't use vectors for this
 	rotateDelta.SubVectors(&c.rotateEnd, &c.rotateStart)
-	fmt.Printf("    End: %f, %f\n", c.rotateEnd.X, c.rotateEnd.Y)
-	fmt.Printf("   -Sta: %f, %f\n", c.rotateStart.X, c.rotateStart.Y)
-	fmt.Printf("    dlt: %f, %f\n", rotateDelta.X, rotateDelta.Y)
 	width, height := c.IWindow.Size()
 	w64, h64 := float64(width), float64(height)
 	x, y := w64*0.5, h64*0.5
@@ -307,12 +292,9 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	} else {
 		c.rotateStart = c.rotateEnd
 	}
-	fmt.Printf("  ->Sta: %f, %f\n", c.rotateStart.X, c.rotateStart.Y)
 	by := 2.0 * math.Pi
 	c.RotateLeft(by * float64(c.RotateSpeedX) / float64(w64) * float64(rotateDelta.X))
 	c.RotateUp(by * float64(c.RotateSpeedY) / float64(h64) * float64(rotateDelta.Y))
-	fmt.Printf("    end: %f, %f\n", c.Xoffset, c.Yoffset)
-	fmt.Println("}")
 }
 
 func (c *Control) onMouseScroll(evname string, event interface{}) {
