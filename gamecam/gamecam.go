@@ -191,6 +191,7 @@ func (c *Control) ZoomOut(amount float64) {
 }
 
 func (c *Control) onMouseButton(evname string, event interface{}) {
+	fmt.Println("onMouseButton")
 	if !c.Enabled() {
 		fmt.Println("    >>> Quick return")
 		return
@@ -214,6 +215,7 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	c.Xoffset, c.Yoffset = xOffset, yOffset
 	if !c.rotating || !c.Enabled() || c.Mode().Screen() {
 		fmt.Println("    >>> Quick return")
+		fmt.Printf("        >>> %v %v %v", !c.rotating, !c.Enabled(), c.Mode().Screen())
 		return
 	}
 	c.rotateEnd.Set(xOffset, yOffset)
@@ -230,6 +232,7 @@ func (c *Control) onMouseScroll(evname string, event interface{}) {
 	fmt.Println("onMouseScroll")
 	if !c.Enabled() || !c.EnableZoom || c.Mode().Screen() {
 		fmt.Println("    >>> Quick return")
+		fmt.Printf("        >>> %v %v %v", !c.Enabled(), !c.EnableZoom, c.Mode().Screen())
 		return
 	}
 	ev := event.(*window.ScrollEvent)
