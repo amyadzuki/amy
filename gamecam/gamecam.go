@@ -355,24 +355,26 @@ func (c *Control) updateRotate(thetaDelta, phiDelta float64) {
 
 const updateZoomEpsilon float64 = 0.01
 const updateZoomEpsilonNegated float64 = -updateZoomEpsilon
+const updateZoomAbsoluteScalar float64 = 1.0 / 16.0
 
 func (c *Control) updateZoomAbsolute(zoom int8) {
 	if ortho, ok := c.iCamera.(*camera.Orthographic); ok {
 		orthoZoom := updateZoomEpsilonNegated * float64(zoom)
 		ortho.SetZoom(float32(orthoZoom))
 	} else {
-		position := c.camera.Position()
-		target := c.camera.Target()
-		vdir := position
-		fmt.Printf("Debug: original Length = %v\n", vdir.Length())
-		return
-		vdir.Sub(&target)
-		fmt.Printf("Debug: final Length = %v\n", vdir.Length())
-		dist := float64(vdir.Length()) * (1.0 + float64(zoom)*float64(c.ZoomSpeed))
-		dist = maths.ClampFloat64(dist, float64(c.MinDistance), float64(c.MaxDistance))
-		vdir.SetLength(float32(dist))
-		target.Add(&vdir)
-		c.camera.SetPositionVec(&target)
+		if zoom < 0 {
+			power := float64(-(zoom + 1)) * updateZoomAbsoluteScalar
+			distance := math.Pow(math.Phi, power)
+			position := c.camera.Position()
+			target := c.target
+			position.Sub(&target)
+			distance = maths.ClampFloat64(distance,
+				float64(c.MinDistance), float64(c.MaxDistance))
+			position.SetLength(float32(dist))
+			target.Add(&position)
+			c.camera.SetPositionVec(&target)
+		} else {
+		}
 	}
 }
 
