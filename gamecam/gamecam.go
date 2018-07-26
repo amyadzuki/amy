@@ -1,7 +1,6 @@
 package gamecam
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/amyadzuki/amystuff/maths"
@@ -415,6 +414,6 @@ func (c *Control) updateZoomAbsolute(zoom int8) {
 	} else {
 		// Just change the field of view
 		scalar := 1.0 - float64(zoom)*updateZoomAbsoluteScalar1P
-		c.persp.SetFov(65.0 * scalar)
+		c.persp.SetFov(float32(65.0 * scalar))
 	}
 }
