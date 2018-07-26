@@ -168,8 +168,9 @@ func (c *Control) SetMode(cm CamMode) (was CamMode) {
 
 func (c *Control) ZoomBySteps(step1P, step3P int) {
 	old := int(c.Zoom)
+	var new int
 	if old >= 0 {
-		new := old + step1P
+		new = old + step1P
 		switch {
 		case new < 0:
 			new = -1
@@ -177,7 +178,7 @@ func (c *Control) ZoomBySteps(step1P, step3P int) {
 			new = 0x70
 		}
 	} else {
-		new := old + step3P
+		new = old + step3P
 		switch {
 		case new >= 0:
 			new = 0
@@ -244,7 +245,7 @@ func (c *Control) onKeyboardKey(evname string, event interface{}) {
 		return
 	}
 	ev := event.(*window.KeyEvent)
-	switch ev.KeyCode {
+	switch ev.Keycode {
 	case window.KeyLeftAlt:
 		switch ev.Action {
 		case window.Press:
@@ -293,12 +294,12 @@ func (c *Control) updateRotate(thetaDelta, phiDelta float64) {
 	quatInverse.Inverse()
 	vdir.ApplyQuaternion(&quat)
 	radius := vdir.Length()
-	theta := math32.Atan2(vdir.X, vdir.Z)
-	phi := math32.Acos(vdir.Y / radius)
+	theta := float64(math32.Atan2(vdir.X, vdir.Z)) // TODO: 64-bit
+	phi := float64(math32.Acos(vdir.Y / radius))   // TODO: 64-bit
 	theta += thetaDelta
 	phi += phiDelta
-	theta = maths.ClampFloat64(theta, c.MinAzimuthAngle, c.MaxAzimuthAngle)
-	phi = maths.ClampFloat64(phi, min, max)
+	theta = maths.ClampFloat64(theta, float64(c.MinAzimuthAngle), float64(c.MaxAzimuthAngle))
+	phi = maths.ClampFloat64(phi, float64(min), float64(max))
 	vdir.X = radius * math.Sin(phi) * math.Sin(theta)
 	vdir.Y = radius * math.Cos(phi)
 	vdir.Z = radius * math.Sin(phi) * math.Cos(theta)
@@ -321,7 +322,7 @@ func (c *Control) updateZoom(zoomDelta float64) {
 		vdir := position
 		vdir.Sub(&target)
 		dist := float64(vdir.Length()) * (1.0 + zoomDelta*c.ZoomSpeed/10.0)
-		dist = maths.ClampFloat64(dist, c.MinDistance, c.MaxDistance)
+		dist = maths.ClampFloat64(dist, float64(c.MinDistance), float64(c.MaxDistance))
 		vdir.SetLength(float32(dist))
 		target.Add(&vdir)
 		c.camera.SetPositionVec(&target)
