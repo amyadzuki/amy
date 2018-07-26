@@ -14,7 +14,7 @@ import (
 )
 
 type Control struct {
-	TODO bool
+	TODO    bool
 	iCamera camera.ICamera
 	IWindow window.IWindow
 
@@ -285,6 +285,8 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	c.rotateEnd.Set(xOffset, yOffset)
 	var rotateDelta math32.Vector2 // TODO: don't use vectors for this
 	rotateDelta.SubVectors(&c.rotateEnd, &c.rotateStart)
+	fmt.Printf("    End: %f, %f\n", c.rotateEnd.X, c.rotateEnd.Y)
+	fmt.Printf("   -Sta: %f, %f\n", c.rotateStart.X, c.rotateStart.Y)
 	fmt.Printf("    dlt: %f, %f\n", rotateDelta.X, rotateDelta.Y)
 	if c.TODO {
 		c.rotateStart = c.rotateEnd
