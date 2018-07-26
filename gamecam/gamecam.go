@@ -2,13 +2,13 @@ package gamecam
 
 import (
 	"fmt"
+	"math"
 
 	"github.com/amyadzuki/amystuff/maths"
 
 	"github.com/g3n/engine/camera"
 	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/window"
-	"math"
 )
 
 type Control struct {
@@ -272,10 +272,13 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	by := 2.0 * math.Pi * float64(c.RotateSpeed)
 	c.RotateLeft(by / float64(w64) * float64(rotateDelta.X))
 	c.RotateUp(by / float64(h64) * float64(rotateDelta.Y))
-	c.ignoreMouseCursor = true
+	//c.ignoreMouseCursor = true
+	c.rotating = false
 	c.IWindow.SetCursorPos(w64*0.5, h64*0.5)
-	c.ignoreMouseCursor = false
+	//c.ignoreMouseCursor = false
+	c.rotating = true
 	c.rotateStart.Set(float32(c.Xoffset), float32(c.Yoffset))
+	c.rotateEnd = c.rotateStart
 }
 
 func (c *Control) onMouseScroll(evname string, event interface{}) {
