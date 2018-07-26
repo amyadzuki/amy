@@ -8,7 +8,7 @@ type CamMode struct {
 	bitfield.Uint8
 }
 
-var ImplScreen func(cm) bool = nil
+var ImplScreen func(CamMode) bool = nil
 
 func (cm CamMode) Screen() bool {
 	if ImplScreen != nil {
