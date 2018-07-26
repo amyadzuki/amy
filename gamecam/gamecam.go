@@ -14,9 +14,10 @@ import (
 )
 
 type Control struct {
-	MutexMouseCursor trylock.Mutex
-	iCamera          camera.ICamera
-	IWindow          window.IWindow
+	iCamera camera.ICamera
+	IWindow window.IWindow
+
+	mutexMouseCursor trylock.Mutex // sizes: sync.Mutex: 8, trylock.Mutex: 8
 
 	camera *camera.Camera
 
@@ -255,7 +256,7 @@ func (c *Control) onMouseButton(evname string, event interface{}) {
 }
 
 func (c *Control) onMouseCursor(evname string, event interface{}) {
-	locked := c.MutexMouseCursor.TryLock()
+	locked := c.mutexMouseCursor.TryLock()
 	if !locked {
 		fmt.Print("    ")
 	}
@@ -274,7 +275,7 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 		fmt.Println("    } // already locked")
 		return
 	}
-	defer c.MutexMouseCursor.Unlock()
+	defer c.mutexMouseCursor.Unlock()
 	c.Xoffset, c.Yoffset = xOffset, yOffset
 	fmt.Printf("    now: %f, %f\n", c.Xoffset, c.Yoffset)
 	if !c.rotating || !c.Enabled() || c.Mode().Screen() {
@@ -283,6 +284,7 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	c.rotateEnd.Set(xOffset, yOffset)
 	var rotateDelta math32.Vector2 // TODO: don't use vectors for this
 	rotateDelta.SubVectors(&c.rotateEnd, &c.rotateStart)
+	fmt.Printf("    dlt: %f, %f\n", rotateDelta.X, rotateDelta.Y)
 	//c.rotateStart = c.rotateEnd
 	width, height := c.IWindow.Size()
 	w64, h64 := float64(width), float64(height)
