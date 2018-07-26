@@ -101,8 +101,8 @@ func (c *Control) Init(iCamera camera.ICamera, iWindow window.IWindow) {
 	c.mode.Init(DefaultToScreen)
 
 	c.Zoom = -0x21
-	c.ZoomStep1P = 0x08
-	c.ZoomStep3P = 0x08
+	c.ZoomStep1P = 0x04
+	c.ZoomStep3P = 0x04
 
 	c.EnableKeys = true
 	c.EnableZoom = true
@@ -210,11 +210,7 @@ func (c *Control) ZoomBySteps(step1P, step3P int) {
 	}
 	zoom := int8(new)
 	c.Zoom = zoom
-	if zoom >= 0 {
-		c.updateZoomAbsolute(zoom)
-	} else {
-		c.updateZoomAbsolute(zoom)
-	}
+	c.updateZoomAbsolute(zoom)
 }
 
 func (c *Control) ZoomIn(amount float64) {
@@ -307,7 +303,7 @@ func (c *Control) onMouseScroll(evname string, event interface{}) {
 		return
 	}
 	ev := event.(*window.ScrollEvent)
-	c.ZoomOut(float64(ev.Yoffset))
+	c.ZoomIn(float64(ev.Yoffset))
 }
 
 const updateRotateEpsilon float64 = 0.01
@@ -354,15 +350,18 @@ func (c *Control) updateRotate(thetaDelta, phiDelta float64) {
 
 const updateZoomEpsilon float64 = 0.01
 const updateZoomEpsilonNegated float64 = -updateZoomEpsilon
-const updateZoomAbsoluteScalar float64 = 1.0 / 16.0
+const updateZoomAbsoluteScalar1P float64 = 1.0 / 16.0
+const updateZoomAbsoluteScalar3P float64 = 1.0 / 16.0
 
 func (c *Control) updateZoomAbsolute(zoom int8) {
 	if ortho, ok := c.iCamera.(*camera.Orthographic); ok {
 		orthoZoom := updateZoomEpsilonNegated * float64(zoom)
 		ortho.SetZoom(float32(orthoZoom))
+		panic("Not implemented: orthographic zoom") // todo: implement someday
 	} else {
 		if zoom < 0 {
-			power := float64(-(zoom + 1)) * updateZoomAbsoluteScalar
+			// Lock the target and change the position
+			power := float64(-(zoom + 1)) * updateZoomAbsoluteScalar3P
 			distance := math.Pow(math.Phi, power)
 			position := c.camera.Position()
 			target := c.camera.Target()
@@ -373,6 +372,18 @@ func (c *Control) updateZoomAbsolute(zoom int8) {
 			target.Add(&position)
 			c.camera.SetPositionVec(&target)
 		} else {
+			// Lock the position and change the target
+			power := float64(zoom) * updateZoomAbsoluteScalar1P
+			distance := math.Pow(math.Phi, power)
+			position := c.camera.Position()
+			target := c.camera.Target()
+
+			target.Sub(&position)
+			distance = maths.ClampFloat64(distance,
+				float64(c.MinDistance), float64(c.MaxDistance))
+			target.SetLength(float32(distance))
+			position.Add(&target)
+			c.camera.LookAt(&position)
 		}
 	}
 }
