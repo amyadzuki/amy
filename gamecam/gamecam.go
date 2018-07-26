@@ -14,7 +14,6 @@ import (
 )
 
 type Control struct {
-	TODO    bool
 	iCamera camera.ICamera
 	IWindow window.IWindow
 
@@ -45,8 +44,9 @@ type Control struct {
 	ZoomStep1P int8 // negate to invert zoom direction
 	ZoomStep3P int8 // negate to invert zoom direction
 
-	EnableKeys bool
-	EnableZoom bool
+	EnableKeys      bool
+	EnableZoom      bool
+	SnapMouseCursor bool
 
 	enabled    bool
 	rotating   bool
@@ -104,6 +104,7 @@ func (c *Control) Init(iCamera camera.ICamera, iWindow window.IWindow) {
 
 	c.EnableKeys = true
 	c.EnableZoom = true
+	c.SnapMouseCursor = true
 
 	c.enabled = true
 	c.rotating = false
@@ -276,7 +277,6 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 		return
 	}
 	defer c.mutexMouseCursor.Unlock()
-	defer c.rotateStart.Set(float32(c.Xoffset), float32(c.Yoffset))
 	c.Xoffset, c.Yoffset = xOffset, yOffset
 	fmt.Printf("    now: %f, %f\n", c.Xoffset, c.Yoffset)
 	if !c.rotating || !c.Enabled() || c.Mode().Screen() {
@@ -288,17 +288,19 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	fmt.Printf("    End: %f, %f\n", c.rotateEnd.X, c.rotateEnd.Y)
 	fmt.Printf("   -Sta: %f, %f\n", c.rotateStart.X, c.rotateStart.Y)
 	fmt.Printf("    dlt: %f, %f\n", rotateDelta.X, rotateDelta.Y)
-	if c.TODO {
-		c.rotateStart = c.rotateEnd
-	}
 	width, height := c.IWindow.Size()
 	w64, h64 := float64(width), float64(height)
+	x, y := w64*0.5, h64*0.5
+	if c.SnapMouseCursor {
+		c.IWindow.SetCursorPos(x, y)
+		c.rotateStart.Set(float32(x), float32(y))
+	} else {
+		c.rotateStart = c.rotateEnd
+	}
+	fmt.Printf("  ->Sta: %f, %f\n", c.rotateStart.X, c.rotateStart.Y)
 	by := 2.0 * math.Pi * float64(c.RotateSpeed)
 	c.RotateLeft(by / float64(w64) * float64(rotateDelta.X))
 	c.RotateUp(by / float64(h64) * float64(rotateDelta.Y))
-	if !c.TODO {
-		c.IWindow.SetCursorPos(w64*0.5, h64*0.5)
-	}
 	fmt.Printf("    end: %f, %f\n", c.Xoffset, c.Yoffset)
 	fmt.Println("}")
 }
