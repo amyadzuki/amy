@@ -368,7 +368,7 @@ func (c *Control) updateZoomAbsolute(zoom int8) {
 		return
 		vdir.Sub(&target)
 		fmt.Printf("Debug: final Length = %v\n", vdir.Length())
-		dist := float64(vdir.Length()) * (1.0 + zoomDelta*float64(c.ZoomSpeed))
+		dist := float64(vdir.Length()) * (1.0 + float64(zoom)*float64(c.ZoomSpeed))
 		dist = maths.ClampFloat64(dist, float64(c.MinDistance), float64(c.MaxDistance))
 		vdir.SetLength(float32(dist))
 		target.Add(&vdir)
