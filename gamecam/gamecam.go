@@ -148,6 +148,7 @@ func (c *Control) SetDefaultToScreen(defaultToScreen bool) (was bool) {
 		c.SetMode(CamMode{wasMode.ClrCopy(DefaultToScreen)})
 	}
 	was = wasMode.All(DefaultToScreen)
+	return
 }
 
 func (c *Control) SetEnabled(enabled bool) (was bool) {
