@@ -254,7 +254,7 @@ func (c *Control) onMouseButton(evname string, event interface{}) {
 }
 
 func (c *Control) onMouseCursor(evname string, event interface{}) {
-	locked = c.MutexMouseCursor.TryLock()
+	locked := c.MutexMouseCursor.TryLock()
 	if !locked {
 		fmt.Print("    ")
 	}
