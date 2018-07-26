@@ -1,10 +1,14 @@
 package gamecam
 
-import "github.com/amyadzuki/amystuff/bitfield"
+import (
+	"github.com/amyadzuki/amystuff/bitfield"
+)
 
-type CamMode bitfield.Uint8
+type CamMode struct {
+	bitfield.Uint8
+}
 
-var ImplScreen func(CamMode) bool = nil
+var ImplScreen func(cm) bool = nil
 
 func (cm CamMode) Screen() bool {
 	if ImplScreen != nil {
