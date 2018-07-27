@@ -191,10 +191,17 @@ func (c *Control) SetMode(cm CamMode) (was CamMode) {
 			c.IWindow.SetInputMode(window.CursorMode, window.CursorNormal)
 		}
 	case was.Screen() && cm.World():
-		c.rotating = true
 		if c.HideMouseCursor {
 			c.IWindow.SetInputMode(window.CursorMode, window.CursorHidden)
 		}
+		if c.SnapMouseCursor {
+			width, height := c.IWindow.Size()
+			w64, h64 := float64(width), float64(height)
+			x, y := w64*0.5, h64*0.5
+			c.IWindow.SetCursorPos(x, y)
+			c.rotateStart.Set(float32(x), float32(y))
+		}
+		c.rotating = true
 	}
 	return
 }
