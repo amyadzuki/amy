@@ -1,7 +1,6 @@
 package gamecam
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/amyadzuki/amystuff/maths"
@@ -187,12 +186,6 @@ func (c *Control) SetMode(cm CamMode) (was CamMode) {
 		c.IWindow.SetInputMode(window.CursorMode, window.CursorNormal)
 	case was.Screen() && cm.World():
 		c.IWindow.SetInputMode(window.CursorMode, window.CursorDisabled)
-		//width, height := c.IWindow.Size()
-		//w64, h64 := float64(width), float64(height)
-		//x, y := w64*0.5, h64*0.5
-		//c.IWindow.SetCursorPos(x, y)
-		//c.rotateStart.Set(float32(x), float32(y))//TODO:B
-		fmt.Printf("B: %v, %v\n", c.rotateStart.X, c.rotateStart.Y)
 		c.rotating = true
 	}
 	return
@@ -295,7 +288,6 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	ev := event.(*window.CursorEvent)
 	xOffset, yOffset := ev.Xpos, ev.Ypos
 	c.Xoffset, c.Yoffset = xOffset, yOffset
-	fmt.Printf("*: %v, %v\n", xOffset, yOffset)
 
 	if !c.rotating || !c.Enabled() || c.Mode().Screen() {
 		return
@@ -304,14 +296,9 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	c.rotateEnd.Set(xOffset, yOffset)
 	var rotateDelta math32.Vector2 // TODO: don't use vectors for this
 	rotateDelta.SubVectors(&c.rotateEnd, &c.rotateStart)
+	c.rotateStart = c.rotateEnd
 	width, height := c.IWindow.Size()
 	w64, h64 := float64(width), float64(height)
-	//x, y := w64*0.5, h64*0.5//TODO:A
-	//c.IWindow.SetCursorPos(x, y)
-	//c.rotateStart.Set(float32(x), float32(y))
-	fmt.Printf("A: %v, %v\n", c.rotateStart.X, c.rotateStart.Y)
-	c.rotateStart = c.rotateEnd
-	fmt.Printf("-> %v, %v\n", c.rotateStart.X, c.rotateStart.Y)
 	by := 2.0 * math.Pi
 	c.RotateLeft(by * float64(c.RotateSpeedX) / float64(w64) * float64(rotateDelta.X))
 	c.RotateUp(by * float64(c.RotateSpeedY) / float64(h64) * float64(rotateDelta.Y))
