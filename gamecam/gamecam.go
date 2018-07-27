@@ -186,6 +186,9 @@ func (c *Control) SetMode(cm CamMode) (was CamMode) {
 		c.IWindow.SetInputMode(window.CursorMode, window.CursorNormal)
 	case was.Screen() && cm.World():
 		c.IWindow.SetInputMode(window.CursorMode, window.CursorDisabled)
+		w, h := c.IWindow.Size()
+		x, y := 0.5*float64(w), 0.5*float64(h)
+		c.IWindow.SetCursorPos(x, y)
 		c.rotating = true
 	}
 	return
