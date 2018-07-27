@@ -3,7 +3,6 @@ package gamecam
 import (
 	"math"
 
-	"github.com/amyadzuki/amystuff/bitfield"
 	"github.com/amyadzuki/amystuff/maths"
 
 	"github.com/g3n/engine/camera"
@@ -121,9 +120,6 @@ func (c *Control) Init(followee Followee, persp *camera.Perspective, iWindow win
 	c.enabled = true
 	c.rotating = false
 	c.subsEvents = 0
-
-	// c.SetMode(CamMode{bitfield.Uint8(0)})
-	// c.SetMode(CamMode{bitfield.Uint8(DefaultToScreen)})
 
 	c.IWindow.SubscribeID(window.OnCursor, &c.subsEvents, c.onMouseCursor)
 	c.IWindow.SubscribeID(window.OnMouseUp, &c.subsEvents, c.onMouseButton)
