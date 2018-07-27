@@ -310,6 +310,8 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	//c.IWindow.SetCursorPos(x, y)
 	//c.rotateStart.Set(float32(x), float32(y))
 	fmt.Printf("A: %v, %v\n", c.rotateStart.X, c.rotateStart.Y)
+	c.rotateStart = c.rotateEnd
+	fmt.Printf("-> %v, %v\n", c.rotateStart.X, c.rotateStart.Y)
 	by := 2.0 * math.Pi
 	c.RotateLeft(by * float64(c.RotateSpeedX) / float64(w64) * float64(rotateDelta.X))
 	c.RotateUp(by * float64(c.RotateSpeedY) / float64(h64) * float64(rotateDelta.Y))
