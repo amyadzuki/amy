@@ -46,10 +46,8 @@ type Control struct {
 	ZoomStep1P int8 // negate to invert zoom direction
 	ZoomStep3P int8 // negate to invert zoom direction
 
-	EnableKeys      bool
-	EnableZoom      bool
-	HideMouseCursor bool
-	SnapMouseCursor bool
+	EnableKeys bool
+	EnableZoom bool
 
 	enabled    bool
 	rotating   bool
@@ -117,8 +115,6 @@ func (c *Control) Init(followee Followee, persp *camera.Perspective, iWindow win
 
 	c.EnableKeys = true
 	c.EnableZoom = true
-	c.HideMouseCursor = true
-	c.SnapMouseCursor = true
 
 	c.enabled = true
 	c.rotating = false
@@ -187,20 +183,14 @@ func (c *Control) SetMode(cm CamMode) (was CamMode) {
 	switch {
 	case was.World() && cm.Screen():
 		c.rotating = false
-		if c.HideMouseCursor {
-			c.IWindow.SetInputMode(window.CursorMode, window.CursorNormal)
-		}
+		c.IWindow.SetInputMode(window.CursorMode, window.CursorNormal)
 	case was.Screen() && cm.World():
-		if c.HideMouseCursor {
-			c.IWindow.SetInputMode(window.CursorMode, window.CursorHidden)
-		}
-		if c.SnapMouseCursor {
-			width, height := c.IWindow.Size()
-			w64, h64 := float64(width), float64(height)
-			x, y := w64*0.5, h64*0.5
-			c.IWindow.SetCursorPos(x, y)
-			c.rotateStart.Set(float32(x), float32(y))
-		}
+		c.IWindow.SetInputMode(window.CursorMode, window.CursorDisabled)
+		width, height := c.IWindow.Size()
+		w64, h64 := float64(width), float64(height)
+		x, y := w64*0.5, h64*0.5
+		c.IWindow.SetCursorPos(x, y)
+		c.rotateStart.Set(float32(x), float32(y))
 		c.rotating = true
 	}
 	return
@@ -313,13 +303,9 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	rotateDelta.SubVectors(&c.rotateEnd, &c.rotateStart)
 	width, height := c.IWindow.Size()
 	w64, h64 := float64(width), float64(height)
-	x, y := w64*0.5, h64*0.5
-	if c.SnapMouseCursor {
-		c.IWindow.SetCursorPos(x, y)
-		c.rotateStart.Set(float32(x), float32(y))
-	} else {
-		c.rotateStart = c.rotateEnd
-	}
+	//x, y := w64*0.5, h64*0.5//TODO:A
+	//c.IWindow.SetCursorPos(x, y)
+	//c.rotateStart.Set(float32(x), float32(y))
 	by := 2.0 * math.Pi
 	c.RotateLeft(by * float64(c.RotateSpeedX) / float64(w64) * float64(rotateDelta.X))
 	c.RotateUp(by * float64(c.RotateSpeedY) / float64(h64) * float64(rotateDelta.Y))
