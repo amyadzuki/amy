@@ -3,6 +3,7 @@ package gamecam
 import (
 	"math"
 
+	"github.com/amyadzuki/amystuff/bitfield"
 	"github.com/amyadzuki/amystuff/maths"
 
 	"github.com/g3n/engine/camera"
