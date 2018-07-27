@@ -108,6 +108,7 @@ func (c *Control) Init(followee Followee, persp *camera.Perspective, iWindow win
 	c.ZoomSpeed = 0.1
 
 	c.mode.Init(DefaultToScreen)
+	c.updateRotate(0, 0)
 
 	c.Zoom = -0x21
 	c.ZoomStep1P = 0x04
@@ -337,15 +338,16 @@ func (c *Control) initPositionAndTarget1P() {
 }
 
 func (c *Control) initPositionAndTarget3P() {
-	vec := c.Followee.Position()
-	x, y, z := float64(vec.X), float64(vec.Y), float64(vec.Z)
+	target := c.Followee.Position()
+	x, y, z := float64(target.X), float64(target.Y), float64(target.Z)
 	z += c.Followee.HeightToEye() * 0 // TODO
-	vec.Z = float32(z)
-	c.camera.LookAt(&vec)
+	target.Z = float32(z)
+	vec := target
 	dx, dy := c.Followee.FacingNormalized()
 	vec.X, vec.Y = float32(x-dx), float32(y-dy)
 	vec.Z = float32(z + math.Phi)
 	c.camera.SetPositionVec(vec.Normalize())
+	c.camera.LookAt(&target)
 	c.persp.SetFov(65)
 }
 
