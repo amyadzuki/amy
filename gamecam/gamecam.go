@@ -121,6 +121,9 @@ func (c *Control) Init(followee Followee, persp *camera.Perspective, iWindow win
 	c.rotating = false
 	c.subsEvents = 0
 
+	c.SetMode(0)
+	c.SetMode(DefaultToScreen)
+
 	c.IWindow.SubscribeID(window.OnCursor, &c.subsEvents, c.onMouseCursor)
 	c.IWindow.SubscribeID(window.OnMouseUp, &c.subsEvents, c.onMouseButton)
 	c.IWindow.SubscribeID(window.OnMouseDown, &c.subsEvents, c.onMouseButton)
