@@ -329,7 +329,7 @@ func (c *Control) initPositionAndTarget1P() {
 func (c *Control) initPositionAndTarget3P() {
 	target := c.Followee.Position()
 	x, y, z := float64(target.X), float64(target.Y), float64(target.Z)
-	z += c.Followee.HeightToEye() * 0 // TODO
+	z += c.Followee.HeightToEye()
 	target.Z = float32(z)
 	vec := target
 	dx, dy := c.Followee.FacingNormalized()
