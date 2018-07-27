@@ -248,7 +248,7 @@ func (c *Control) onKeyboardKey(evname string, event interface{}) {
 	}
 	ev := event.(*window.KeyEvent)
 	switch ev.Keycode {
-	case window.KeyLeftAlt:
+	case window.KeyLeftAlt, window.KeyLeftSuper:
 		switch ev.Action {
 		case window.Press:
 			c.SetMode(CamMode{c.Mode().SetCopy(ScreenButtonHeld)})
@@ -295,6 +295,7 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	ev := event.(*window.CursorEvent)
 	xOffset, yOffset := ev.Xpos, ev.Ypos
 	c.Xoffset, c.Yoffset = xOffset, yOffset
+	fmt.Printf("*: %v, %v\n", xOffset, yOffset)
 
 	if !c.rotating || !c.Enabled() || c.Mode().Screen() {
 		return
