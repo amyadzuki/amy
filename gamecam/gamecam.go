@@ -88,6 +88,7 @@ func (c *Control) Init(followee Followee, persp *camera.Perspective, iWindow win
 
 	c.camera = persp.GetCamera()
 	c.persp = persp
+	c.initPositionAndTarget3P()
 
 	c.position0 = c.camera.Position()
 	c.target0 = c.camera.Target()
