@@ -186,11 +186,13 @@ func (c *Control) SetMode(cm CamMode) (was CamMode) {
 		c.IWindow.SetInputMode(window.CursorMode, window.CursorNormal)
 	case was.Screen() && cm.World():
 		c.IWindow.SetInputMode(window.CursorMode, window.CursorDisabled)
-		width, height := c.IWindow.Size()
-		w64, h64 := float64(width), float64(height)
-		x, y := w64*0.5, h64*0.5
-		c.IWindow.SetCursorPos(x, y)
-		c.rotateStart.Set(float32(x), float32(y))
+		//width, height := c.IWindow.Size()
+		//w64, h64 := float64(width), float64(height)
+		//x, y := w64*0.5, h64*0.5
+		//c.IWindow.SetCursorPos(x, y)
+		//c.rotateStart.Set(float32(x), float32(y))//TODO:B
+		x, y := c.IWindow.CursorPos()
+		fmt.Printf("B: %v, %v | %v, %v\n", x, y, c.rotateStart.X, c.rotateStart.Y)
 		c.rotating = true
 	}
 	return
@@ -306,6 +308,8 @@ func (c *Control) onMouseCursor(evname string, event interface{}) {
 	//x, y := w64*0.5, h64*0.5//TODO:A
 	//c.IWindow.SetCursorPos(x, y)
 	//c.rotateStart.Set(float32(x), float32(y))
+	x, y := c.IWindow.CursorPos()
+	fmt.Printf("A: %v, %v | %v, %v\n", x, y, c.rotateStart.X, c.rotateStart.Y)
 	by := 2.0 * math.Pi
 	c.RotateLeft(by * float64(c.RotateSpeedX) / float64(w64) * float64(rotateDelta.X))
 	c.RotateUp(by * float64(c.RotateSpeedY) / float64(h64) * float64(rotateDelta.Y))
