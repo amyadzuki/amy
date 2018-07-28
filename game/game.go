@@ -26,7 +26,10 @@ import (
 	"github.com/g3n/engine/renderer"
 	"github.com/g3n/engine/window"
 
+
         "github.com/golang-ui/nuklear/nk"
+
+	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
 type Game struct {
@@ -475,13 +478,15 @@ func (game *Game) StartUp(logPath string) (err error) {
 	game.Win.Subscribe(window.OnMouseUp, game.onMouseButton)
 	game.Win.Subscribe(window.OnCursor, game.onMouseCursor)
 
-	game.NkCtx = nk.NkPlatformInit(game.Win, nk.PlatformInstallCallbacks)
-	game.NkAtlas = nk.NewFontAtlas()
-	game.NkSans = nk.NkFontAtlasAddFromBytes(game.NkAtlas,
-		MustAsset("assets/FreeSans.ttf"), 16, nil)
-	nk.FontStashEnd()
-	if game.NkSans != nil {
-		nk.NkStyleSetFont(game.NkCtx, game.NkSans.Handle())
+	if glfwWin, ok := game.Win.(*glfw.Window); ok {
+		game.NkCtx = nk.NkPlatformInit(glfwWin, nk.PlatformInstallCallbacks)
+		game.NkAtlas = nk.NewFontAtlas()
+		game.NkSans = nk.NkFontAtlasAddFromBytes(game.NkAtlas,
+			MustAsset("assets/FreeSans.ttf"), 16, nil)
+		nk.FontStashEnd()
+		if game.NkSans != nil {
+			nk.NkStyleSetFont(game.NkCtx, game.NkSans.Handle())
+		}
 	}
 
 	return
