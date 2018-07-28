@@ -10,8 +10,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/amyadzuki/amygolib/str"
+
 	"github.com/amyadzuki/amystuff/logs"
-	"github.com/amyadzuki/amystuff/str"
 	"github.com/amyadzuki/amystuff/styles"
 	"github.com/amyadzuki/amystuff/widget"
 
