@@ -69,7 +69,8 @@ type Game struct {
 	LightAmbient *light.Ambient
 	Logs         *logs.Logs
 	Rend         *renderer.Renderer
-	Root         *gui.Root
+	RealRoot     *gui.Root
+	Gui          *gui.Panel
 	Scene        *core.Node
 
 	w, h int
@@ -92,20 +93,20 @@ func New(title string) (game *Game) {
 func (game *Game) AddDockBotLeft() {
 	game.DockBotLeft = gui.NewPanel(0, 0)
 	game.DockBotLeft.SetLayout(gui.NewDockLayout())
-	game.Root.Add(game.DockBotLeft)
+	game.Gui.Add(game.DockBotLeft)
 }
 
 func (game *Game) AddDockBotRight() {
 	game.DockBotRight = gui.NewPanel(0, 0)
 	game.DockBotRight.SetLayout(gui.NewDockLayout())
-	game.Root.Add(game.DockBotRight)
+	game.Gui.Add(game.DockBotRight)
 }
 
 func (game *Game) AddDockTop() {
 	game.DockTop = gui.NewPanel(0, 0)
 	game.DockTop.SetLayout(gui.NewDockLayout())
 	game.DockTop.SetLayoutParams(&gui.DockLayoutParams{gui.DockTop})
-	game.Root.Add(game.DockTop)
+	game.Gui.Add(game.DockTop)
 }
 
 func (game *Game) AddWidgetCharaChanger(label string) {
@@ -223,7 +224,7 @@ func (game *Game) AddWindowInventory() {
 	// game.WindowInventory.SetResizable(gui.ResizeAll)
 	game.WindowInventory.SetLayout(gui.NewFillLayout(true, true))
 	game.WindowInventory.SetColor4(&math32.Color4{0, 0, 0, 0.75})
-	game.Root.Add(game.WindowInventory)
+	game.Gui.Add(game.WindowInventory)
 }
 
 func (game *Game) Close() error {
@@ -462,16 +463,20 @@ func (game *Game) StartUp(logPath string) (err error) {
 
 	gui.SetStyleDefault(&styles.AmyDark)
 
-	game.Root = gui.NewRoot(game.Gs, game.Win)
-	game.Root.SetSize(float32(width), float32(height))
-	game.Root.SetLayout(gui.NewDockLayout())
+	game.RealRoot = gui.NewRoot(game.Gs, game.Win)
+	game.RealRoot.SetSize(float32(width), float32(height))
+	game.RealRoot.SetLayout(gui.NewFillLayout(true, true))
+
+	game.Gui = gui.NewPanel(float32(width), float32(height))
+	game.Gui.SetLayout(gui.NewDockLayout())
+	game.RealRoot.Add(game.Gui)
 
 	game.Rend = renderer.NewRenderer(game.Gs)
 	if err := game.Rend.AddDefaultShaders(); err != nil {
 		panic(err)
 	}
 	game.Rend.SetScene(game.Scene)
-	game.Rend.SetGui(game.Root)
+	game.Rend.SetGui(game.RealRoot)
 
 	game.Win.Subscribe(window.OnWindowSize, game.onWinCh)
 	game.Win.Subscribe(window.OnKeyDown, game.onKeyboardKey)
@@ -600,10 +605,10 @@ func (game *Game) onWinCh(evname string, ev interface{}) {
 	} else {
 		game.Warn("onWinCh but game.GS was nil")
 	}
-	if game.Root != nil {
-		game.Root.SetSize(float32(w), float32(h))
+	if game.RealRoot != nil {
+		game.RealRoot.SetSize(float32(w), float32(h))
 	} else {
-		game.Warn("onWinCh but game.Root was nil")
+		game.Warn("onWinCh but game.RealRoot was nil")
 	}
 	game.RecalcDocks()
 	game.RecalcPerformanceWidgets()
