@@ -481,9 +481,10 @@ func (game *Game) StartUp(logPath string) (err error) {
 	if glfwWin, ok := game.Win.(*glfw.Window); ok {
 		game.NkCtx = nk.NkPlatformInit(glfwWin, nk.PlatformInstallCallbacks)
 		game.NkAtlas = nk.NewFontAtlas()
+		nk.NkFontStashBegin(&game.NkAtlas)
 		game.NkSans = nk.NkFontAtlasAddFromBytes(game.NkAtlas,
 			MustAsset("assets/FreeSans.ttf"), 16, nil)
-		nk.FontStashEnd()
+		nk.NkFontStashEnd()
 		if game.NkSans != nil {
 			nk.NkStyleSetFont(game.NkCtx, game.NkSans.Handle())
 		}
