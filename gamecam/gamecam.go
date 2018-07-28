@@ -6,6 +6,7 @@ import (
 	"github.com/amyadzuki/amygolib/maths"
 
 	"github.com/g3n/engine/camera"
+	"github.com/g3n/engine/gui"
 	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/window"
 
