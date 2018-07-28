@@ -208,7 +208,7 @@ func (game *Game) AddWindowInventory() {
 	game.WindowInventory = gui.NewWindow(720, 480)
 	game.WindowInventory.SetTitle("Inventory") // TODO: translate
 	game.WindowInventory.SetPosition(60, 60)
-	game.WindowInventory.SetResizable(gui.ResizeAll)
+	game.WindowInventory.SetResizable(gui.ResizeRight | gui.ResizeBottom)
 	game.WindowInventory.SetLayout(gui.NewFillLayout(true, true))
 	game.WindowInventory.SetColor4(&math32.Color4{0, 0, 0, 0.75})
 	game.Root.Add(game.WindowInventory)
