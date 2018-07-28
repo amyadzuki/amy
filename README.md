@@ -8,12 +8,3 @@ As of midnight, 1 August 2018, UTC, this library is open-source proprietary soft
 ```sh
 go get -u github.com/amyadzuki/amystuff/...
 ```
-
-## Imports
-```go
-import "github.com/amyadzuki/amystuff/client"
-import "github.com/amyadzuki/amystuff/server"
-```
-
-## Usage Examples
-For now, see the README.md in each subdirectory for examples of that package.
