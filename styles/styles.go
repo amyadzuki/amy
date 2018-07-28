@@ -10,6 +10,7 @@ var AmyDarkCloseButton gui.ButtonStyles
 var AmyDarkClosingButton gui.ButtonStyles
 var AmyDarkHelpButton gui.ButtonStyles
 var AmyDarkHelpingButton gui.ButtonStyles
+var AmyDarkWindowContent math32.Color4
 
 func init() {
 	AmyDark = *gui.StyleDefault()
@@ -25,6 +26,7 @@ func init() {
 	AmyDark.Window.Disabled.TitleBgColor = AmyDark.Window.Normal.TitleBgColor
 	// 0x21/255 0x96/255 0xF3/255
 	// 0.1294117647, 0.58823529411, 0.95294117647
+	AmyDarkWindowContent = math32.Color4{0, 0, 0, 0.25}
 
 	AmyDarkCloseButton = AmyDark.Button
 	AmyDarkCloseButton.Over.BgColor = math32.Color4{0.75, 0, 0, 0.5}
