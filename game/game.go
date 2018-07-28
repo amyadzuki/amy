@@ -206,6 +206,7 @@ func (game *Game) AddWidgetPing() {
 
 func (game *Game) AddWindowInventory() {
 	game.WindowInventory = gui.NewWindow(720, 480)
+	game.WindowInventory.SetTitle("Inventory") // TODO: translate
 	game.WindowInventory.SetPosition(60, 60)
 	game.WindowInventory.SetResizable(gui.ResizeAll)
 	game.WindowInventory.SetLayout(gui.NewFillLayout(true, true))
