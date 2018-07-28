@@ -217,11 +217,11 @@ func (game *Game) AddWidgetPing() {
 }
 
 func (game *Game) AddWindowInventory() {
-	game.WindowInventory = gui.NewWindow(720, 480)
+	game.WindowInventory = gui.NewWindow(960, 720)
 	game.WindowInventory.SetTitle("Inventory") // TODO: translate
 	game.WindowInventory.SetPosition(60, 60)
 	// Resizable windows are currently buggy.
-	// game.WindowInventory.SetResizable(gui.ResizeAll)
+	game.WindowInventory.SetResizable(gui.ResizeAll)
 	game.WindowInventory.SetLayout(gui.NewFillLayout(true, true))
 	game.WindowInventory.SetColor4(&math32.Color4{0, 0, 0, 0.75})
 	game.Gui.Add(game.WindowInventory)
