@@ -585,7 +585,6 @@ func (game *Game) onWinCh(evname string, ev interface{}) {
 		game.Warn("onWinCh but game.RealRoot was nil")
 	}
 	game.RecalcDocks()
-	game.RecalcPerformanceWidgets()
 	if game.Camera != nil {
 		game.Camera.SetAspect(float32(float64(w) / float64(h)))
 	} else {
