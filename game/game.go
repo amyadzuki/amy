@@ -52,6 +52,7 @@ type Game struct {
 	WidgetFullScreen   *gui.Button
 	WidgetHelp         *gui.Button
 	WidgetIconify      *gui.Button
+	WindowInventory    *gui.Window
 
 	Gs           *gls.GLS
 	LightAmbient *light.Ambient
@@ -201,6 +202,11 @@ func (game *Game) AddWidgetPerformance(w *widget.Performance, large int, label s
 
 func (game *Game) AddWidgetPing() {
 	game.AddWidgetPerformance(&game.WidgetPing, 999999, " ms  ")
+}
+
+func (game *Game) AddWindowInventory() {
+	game.WindowInventory = gui.NewWindow(720, 480)
+	game.Root.Add(game.WindowInventory)
 }
 
 func (game *Game) FullScreen() bool {
