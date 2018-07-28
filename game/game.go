@@ -225,7 +225,7 @@ func (game *Game) AddWindowInventory() {
 	// Resizable windows are currently buggy.
 	// game.WindowInventory.SetResizable(gui.ResizeAll)
 	game.WindowInventory.SetLayout(gui.NewFillLayout(true, true))
-	game.WindowInventory.SetColor4(&AmyDarkWindowContent)
+	game.WindowInventory.SetColor4(&styles.AmyDarkWindowContent)
 	game.Gui.Add(game.WindowInventory)
 }
 
