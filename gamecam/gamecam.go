@@ -19,6 +19,8 @@ type Control struct {
 
 	mutexMouseCursor trylock.Mutex // sizes: sync.Mutex: 8, trylock.Mutex: 8
 
+	Gui *gui.Panel
+
 	camera *camera.Camera
 	persp  *camera.Perspective
 
@@ -51,7 +53,7 @@ type Control struct {
 
 	enabled    bool
 	rotating   bool
-	subsEvents int
+	subsEvents bool
 }
 
 func New(followee Followee, persp *camera.Perspective, iWindow window.IWindow) (c *Control) {
@@ -85,6 +87,8 @@ func (c *Control) Init(followee Followee, persp *camera.Perspective, iWindow win
 	w64, h64 := float64(width), float64(height)
 	x, y := w64*0.5, h64*0.5
 	c.IWindow.SetCursorPos(x, y)
+
+	c.Gui = nil
 
 	c.camera = persp.GetCamera()
 	c.persp = persp
@@ -185,7 +189,13 @@ func (c *Control) SetMode(cm CamMode) (was CamMode) {
 	case was.World() && cm.Screen():
 		c.rotating = false
 		c.IWindow.SetInputMode(window.CursorMode, window.CursorNormal)
+		if c.Gui != nil {
+			c.Gui.SetEnabled(true)
+		}
 	case was.Screen() && cm.World():
+		if c.Gui != nil {
+			c.Gui.SetEnabled(false)
+		}
 		c.IWindow.SetInputMode(window.CursorMode, window.CursorDisabled)
 		w, h := c.IWindow.Size()
 		x, y := 0.5*float64(w), 0.5*float64(h)
