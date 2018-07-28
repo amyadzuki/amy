@@ -1,7 +1,7 @@
 package gamecam
 
 import (
-	"github.com/amyadzuki/amystuff/bitfield"
+	"github.com/amyadzuki/amygolib/bitfield"
 )
 
 type CamMode struct {
