@@ -35,7 +35,7 @@ import (
 var _ = glfw.CreateWindow
 
 type Game struct {
-	Camera camera.ICamera
+	Camera *camera.Perspective // TODO: camera.ICamera
 	Win    window.IWindow
 	Wm     window.IWindowManager
 
