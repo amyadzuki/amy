@@ -13,8 +13,11 @@ var AmyDarkHelpingButton gui.ButtonStyles
 
 func init() {
 	AmyDark = *gui.StyleDefault()
-	AmyDark.Button.Normal.BgColor = math32.Color4{0, 0, 0, 0.125}
-	AmyDark.Button.Over.BgColor = math32.Color4{0.25, 0.125, 0.375, 0.25}
+	AmyDark.Button.Normal.BgColor = math32.Color4{0, 0, 0, 0.25}
+	AmyDark.Button.Over.BgColor = math32.Color4{0.25, 0.125, 0.375, 0.5}
+	AmyDark.Button.Focus.BgColor = math32.Color4{0.25, 0.125, 0.375, 0.5}
+	AmyDark.Button.Pressed.BgColor = math32.Color4{0.25, 0.125, 0.375, 1}
+	AmyDark.Button.Disabled.BgColor = math32.Color4{0, 0, 0, 0}
 	AmyDark.Window.Normal.TitleBgColor = math32.Color4{0.1294117647, 0.58823529411, 0.95294117647, 0.25}
 	AmyDark.Window.Over.TitleBgColor = AmyDark.Window.Normal.TitleBgColor
 	AmyDark.Window.Over.TitleBgColor.A = 1
@@ -24,10 +27,15 @@ func init() {
 	// 0.1294117647, 0.58823529411, 0.95294117647
 
 	AmyDarkCloseButton = AmyDark.Button
-	AmyDarkCloseButton.Over.BgColor = math32.Color4{0.75, 0, 0, 1}
+	AmyDarkCloseButton.Over.BgColor = math32.Color4{0.75, 0, 0, 0.5}
+	AmyDarkCloseButton.Focus.BgColor = math32.Color4{0.75, 0, 0, 0.5}
+	AmyDarkCloseButton.Pressed.BgColor = math32.Color4{0.75, 0, 0, 1}
 	AmyDarkClosingButton = AmyDarkCloseButton
-	AmyDarkClosingButton.Normal.BgColor = AmyDarkCloseButton.Over.BgColor
-	AmyDarkClosingButton.Over.BgColor = math32.Color4{1, 0, 0, 1}
+	AmyDarkClosingButton.Normal.BgColor = AmyDarkCloseButton.Pressed.BgColor
+	AmyDarkClosingButton.Over.BgColor = math32.Color4{1, 0, 0, 0.5}
+	AmyDarkClosingButton.Focus.BgColor = math32.Color4{1, 0, 0, 0.5}
+	AmyDarkClosingButton.Pressed.BgColor = math32.Color4{1, 0, 0, 1}
+
 	AmyDarkHelpButton = AmyDark.Button
 	AmyDarkHelpingButton = AmyDarkHelpButton
 }
