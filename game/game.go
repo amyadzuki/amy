@@ -195,8 +195,8 @@ func (game *Game) AddWidgetIconify(label string) {
 
 func (game *Game) AddWidgetPerformance(w *widget.Performance, large int, label string) {
 	w.Init(large, label)
-	w.Panel.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
-	game.DockTop.Add(w.Panel)
+	w.Outer.SetLayoutParams(&gui.DockLayoutParams{gui.DockRight})
+	game.DockTop.Add(w.Outer)
 }
 
 func (game *Game) AddWidgetPing() {
