@@ -35,7 +35,7 @@ import (
 var _ = glfw.CreateWindow
 
 type Game struct {
-	Camera *camera.Perspective // camera.ICamera if my PR gets accepted
+	Camera camera.ICamera
 	Win    window.IWindow
 	Wm     window.IWindowManager
 
@@ -279,32 +279,6 @@ func (game *Game) RecalcDocks() {
 		y := float32(h64 - float64(game.DockBotRight.TotalHeight()))
 		game.DockBotRight.SetPosition(x, y)
 	}
-}
-
-func (game *Game) RecalcPerformanceWidgets() {
-	/*
-	w, _ := game.Size()
-	x := float64(w)
-	if game.DockTop != nil { // FIXME
-		x -= float64(game.DockTop.TotalWidth())
-	}
-	if game.WidgetPing[0] != nil && game.WidgetPing[1] != nil {
-		a := game.MaxWidthPing
-		b := float64(game.WidgetPing[1].TotalWidth())
-		x -= b
-		game.WidgetPing[1].SetPosition(float32(x), 0)
-		x -= a
-		game.WidgetPing[0].SetPosition(float32(x), 0)
-	}
-	if game.WidgetFps[0] != nil && game.WidgetFps[1] != nil {
-		a := game.MaxWidthFps
-		b := float64(game.WidgetFps[1].TotalWidth())
-		x -= b
-		game.WidgetFps[1].SetPosition(float32(x), 0)
-		x -= a
-		game.WidgetFps[0].SetPosition(float32(x), 0)
-	}
-	*/
 }
 
 func (game *Game) SetFullScreen(fullScreen bool) {
