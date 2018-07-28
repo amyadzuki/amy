@@ -29,12 +29,12 @@ func init() {
 	AmyDarkCloseButton = AmyDark.Button
 	AmyDarkCloseButton.Over.BgColor = math32.Color4{0.75, 0, 0, 0.5}
 	AmyDarkCloseButton.Focus.BgColor = math32.Color4{0.75, 0, 0, 0.5}
-	AmyDarkCloseButton.Pressed.BgColor = math32.Color4{0.75, 0, 0, 1}
+	AmyDarkCloseButton.Pressed.BgColor = math32.Color4{1, 0, 0, 1}
 	AmyDarkClosingButton = AmyDarkCloseButton
-	AmyDarkClosingButton.Normal.BgColor = AmyDarkCloseButton.Pressed.BgColor
-	AmyDarkClosingButton.Over.BgColor = math32.Color4{1, 0, 0, 0.5}
-	AmyDarkClosingButton.Focus.BgColor = math32.Color4{1, 0, 0, 0.5}
-	AmyDarkClosingButton.Pressed.BgColor = math32.Color4{1, 0, 0, 1}
+	AmyDarkClosingButton.Normal.BgColor = math32.Color4{1, 0, 0, 0.5}
+	AmyDarkClosingButton.Over.BgColor = AmyDarkCloseButton.Pressed.BgColor
+	AmyDarkClosingButton.Focus.BgColor = AmyDarkCloseButton.Pressed.BgColor
+	AmyDarkClosingButton.Pressed.BgColor = AmyDarkCloseButton.Pressed.BgColor
 
 	AmyDarkHelpButton = AmyDark.Button
 	AmyDarkHelpingButton = AmyDarkHelpButton
