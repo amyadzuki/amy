@@ -26,11 +26,13 @@ import (
 	"github.com/g3n/engine/renderer"
 	"github.com/g3n/engine/window"
 
-
-        "github.com/golang-ui/nuklear/nk"
+	"github.com/golang-ui/nuklear/nk"
 
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
+
+// const DflWidth, DflHeight = 960, 720
+const DflWidth, DflHeight = 1600, 900
 
 var _ = glfw.CreateWindow
 
@@ -217,7 +219,7 @@ func (game *Game) AddWidgetPing() {
 }
 
 func (game *Game) AddWindowInventory() {
-	game.WindowInventory = gui.NewWindow(960, 720)
+	game.WindowInventory = gui.NewWindow(DflWidth, DflHeight)
 	game.WindowInventory.SetTitle("Inventory") // TODO: translate
 	game.WindowInventory.SetPosition(60, 60)
 	// Resizable windows are currently buggy.
@@ -254,19 +256,19 @@ func (game *Game) RecalcDocks() {
 	w, h := game.Size()
 	w64, h64 := float64(w), float64(h)
 	/*
-	if game.DockTop != nil {
-		game.DockTop.SetWidth(0)
-		if game.WidgetCharaChanger != nil {
-			game.addDockSize(game.DockTopLeft, game.WidgetCharaChanger)
+		if game.DockTop != nil {
+			game.DockTop.SetWidth(0)
+			if game.WidgetCharaChanger != nil {
+				game.addDockSize(game.DockTopLeft, game.WidgetCharaChanger)
+			}
+			if game.WidgetHint != nil {
+				game.addDockSize(game.DockTopLeft, game.WidgetHint)
+			}
 		}
-		if game.WidgetHint != nil {
-			game.addDockSize(game.DockTopLeft, game.WidgetHint)
+		if game.DockTopRight != nil {
+			x := float32(w64 - float64(game.DockTopRight.TotalWidth()))
+			game.DockTopRight.SetPosition(x, 0)
 		}
-	}
-	if game.DockTopRight != nil {
-		x := float32(w64 - float64(game.DockTopRight.TotalWidth()))
-		game.DockTopRight.SetPosition(x, 0)
-	}
 	*/
 	game.DockTop.SetWidth(float32(w))
 	game.DockTop.SetHeight(float32(40))
@@ -332,7 +334,7 @@ func (game *Game) StartUp(logPath string) (err error) {
 		"Silence -info- messages from the console")
 	flag_fullscreen := CommandLine.Bool("fullscreen", false,
 		"Launch fullscreen")
-	flag_geometry := CommandLine.String("geometry", "960x720",
+	flag_geometry := CommandLine.String("geometry", strconv.Itoa(DflWidth)+"x"+strconv.Itoa(DflHeight),
 		"Window geometry (H, WxH, or WxH+X+Y)")
 	flag_wm := CommandLine.String("wm", "glfw",
 		"Window manager (one of: \"glfw\")")
@@ -361,7 +363,7 @@ func (game *Game) StartUp(logPath string) (err error) {
 
 	game.Major("Created process and initialized logging for \"" + game.Title + "\"")
 
-	w, h, x, y, n := 960, 720, 0, 0, 0
+	w, h, x, y, n := DflWidth, DflHeight, 0, 0, 0
 	n, err = fmt.Sscanf(*flag_geometry, "%dx%d+%d+%d", &w, &h, &x, &y)
 	if n < 1 || n > 4 || (n == 4 && err != nil) {
 		game.Warn("could not parse window geometry \"" + *flag_geometry + "\"")
@@ -546,7 +548,7 @@ func (game *Game) Fatal(v ...interface{}) {
 
 func (game *Game) addDockSize(p *gui.Panel, w gui.IPanel) {
 	oldW, oldH := p.TotalWidth(), p.TotalHeight()
-	newW, newH := oldW + w.TotalWidth(), w.TotalHeight()
+	newW, newH := oldW+w.TotalWidth(), w.TotalHeight()
 	if oldH > newH {
 		newH = oldH
 	}
