@@ -209,7 +209,7 @@ func (game *Game) AddWindowInventory() {
 	game.WindowInventory.SetPosition(60, 60)
 	game.WindowInventory.SetResizable(gui.ResizeAll)
 	game.WindowInventory.SetLayout(gui.NewFillLayout(true, true))
-	game.WindowInventory.SetBgColor(&math32.Color4{0, 0, 0, 0.75})
+	game.WindowInventory.SetColor4(&math32.Color4{0, 0, 0, 0.75})
 	game.Root.Add(game.WindowInventory)
 }
 
