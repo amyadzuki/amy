@@ -32,6 +32,8 @@ import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
 
+var _ = glfw.Window
+
 type Game struct {
 	Camera *camera.Perspective // camera.ICamera if my PR gets accepted
 	Win    window.IWindow
