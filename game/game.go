@@ -25,6 +25,8 @@ import (
 	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/renderer"
 	"github.com/g3n/engine/window"
+
+        "github.com/golang-ui/nuklear/nk"
 )
 
 type Game struct {
@@ -53,6 +55,10 @@ type Game struct {
 	WidgetHelp         *gui.Button
 	WidgetIconify      *gui.Button
 	WindowInventory    *gui.Window
+
+	NkCtx   *nk.Context
+	NkAtlas *nk.FontAtlas
+	NkSans  *nk.Font
 
 	Gs           *gls.GLS
 	LightAmbient *light.Ambient
@@ -208,10 +214,20 @@ func (game *Game) AddWindowInventory() {
 	game.WindowInventory = gui.NewWindow(720, 480)
 	game.WindowInventory.SetTitle("Inventory") // TODO: translate
 	game.WindowInventory.SetPosition(60, 60)
-	game.WindowInventory.SetResizable(gui.ResizeRight | gui.ResizeBottom)
+	// Resizable windows are currently buggy.
+	// game.WindowInventory.SetResizable(gui.ResizeAll)
 	game.WindowInventory.SetLayout(gui.NewFillLayout(true, true))
 	game.WindowInventory.SetColor4(&math32.Color4{0, 0, 0, 0.75})
 	game.Root.Add(game.WindowInventory)
+}
+
+func (game *Game) Close() error {
+	game.Dispose()
+	return nil
+}
+
+func (game *Game) Dispose() {
+	nk.NkPlatformShutdown()
 }
 
 func (game *Game) FullScreen() bool {
@@ -458,6 +474,15 @@ func (game *Game) StartUp(logPath string) (err error) {
 	game.Win.Subscribe(window.OnMouseDown, game.onMouseButton)
 	game.Win.Subscribe(window.OnMouseUp, game.onMouseButton)
 	game.Win.Subscribe(window.OnCursor, game.onMouseCursor)
+
+	game.NkCtx = nk.NkPlatformInit(game.Win, nk.PlatformInstallCallbacks)
+	game.NkAtlas = nk.NewFontAtlas()
+	game.NkSans = nk.NkFontAtlasAddFromBytes(game.NkAtlas,
+		MustAsset("assets/FreeSans.ttf"), 16, nil)
+	nk.FontStashEnd()
+	if game.NkSans != nil {
+		nk.NkStyleSetFont(game.NkCtx, game.NkSans.Handle())
+	}
 
 	return
 }
