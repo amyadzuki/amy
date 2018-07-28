@@ -478,7 +478,7 @@ func (game *Game) StartUp(logPath string) (err error) {
 	game.Win.Subscribe(window.OnMouseUp, game.onMouseButton)
 	game.Win.Subscribe(window.OnCursor, game.onMouseCursor)
 
-	if glfwWin, ok := game.Win.(*glfw.Window); ok {
+	/* if glfwWin, ok := game.Win.(*glfw.Window); ok {
 		game.NkCtx = nk.NkPlatformInit(glfwWin, nk.PlatformInstallCallbacks)
 		game.NkAtlas = nk.NewFontAtlas()
 		nk.NkFontStashBegin(&game.NkAtlas)
@@ -488,7 +488,7 @@ func (game *Game) StartUp(logPath string) (err error) {
 		if game.NkSans != nil {
 			nk.NkStyleSetFont(game.NkCtx, game.NkSans.Handle())
 		}
-	}
+	} */
 
 	return
 }
