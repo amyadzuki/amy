@@ -348,7 +348,6 @@ func (c *Control) initPositionAndTarget3P() {
 	dx, dy := c.Followee.FacingNormalized()
 	vec.X, vec.Y = float32(x-dx), float32(y-dy)
 	vec.Z = float32(z * math.Phi)
-	// c.camera.SetPositionVec(vec.Normalize())
 	c.camera.SetPositionVec(&vec)
 	c.camera.LookAt(&target)
 	c.persp.SetFov(65)
