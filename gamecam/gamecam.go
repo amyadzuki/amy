@@ -336,6 +336,7 @@ func (c *Control) initPositionAndTarget1P() {
 	dx, dy := c.Followee.FacingNormalized()
 	vec.X, vec.Y = float32(x+dx), float32(y+dy)
 	c.camera.LookAt(&vec)
+	c.updateZoomAbsolute()
 }
 
 func (c *Control) initPositionAndTarget3P() {
@@ -346,10 +347,11 @@ func (c *Control) initPositionAndTarget3P() {
 	vec := target
 	dx, dy := c.Followee.FacingNormalized()
 	vec.X, vec.Y = float32(x-dx), float32(y-dy)
-	vec.Z = float32(z + math.Phi)
+	vec.Z = float32(z * math.Phi)
 	c.camera.SetPositionVec(vec.Normalize())
 	c.camera.LookAt(&target)
 	c.persp.SetFov(65)
+	c.updateZoomAbsolute()
 }
 
 const updateRotateEpsilon float64 = 0.01
