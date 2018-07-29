@@ -344,7 +344,7 @@ func (c *Control) initPositionAndTarget3P() {
 	x, y, z := float64(target.X), float64(target.Y), float64(target.Z)
 	z += 0.70260 * c.Followee.HeightToEye()
 	target.Z = float32(z)
-	vec := target
+	var vec math32.Vector3
 	dx, dy := c.Followee.FacingNormalized()
 	vec.X, vec.Y = float32(x-dx), float32(y-dy)
 	vec.Z = float32(z * math.Phi)
