@@ -231,6 +231,7 @@ func (c *Control) ZoomBySteps(step1P, step3P int) {
 		}
 	}
 	if !c.EnableFps && new >= 0 {
+		init = 3
 		new = -1
 	}
 	zoom := int8(new)
