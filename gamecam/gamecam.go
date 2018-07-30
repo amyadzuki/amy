@@ -253,10 +253,11 @@ func (c *Control) ZoomOut(amount float64) {
 func (c *Control) initPositionAndTarget1P() {
 	vec := c.Followee.Position()
 	x, y, z := float64(vec.X), float64(vec.Y), float64(vec.Z)
+	dx, dy := c.Followee.FacingNormalized()
+	y -= dy * c.Followee.FrontOfEye()
 	z += c.Followee.HeightToEye()
 	vec.Z = float32(z)
 	c.camera.SetPositionVec(&vec)
-	dx, dy := c.Followee.FacingNormalized()
 	vec.X, vec.Y = float32(x+dx), float32(y+dy)
 	c.camera.LookAt(&vec)
 	c.updateZoomAbsolute()
