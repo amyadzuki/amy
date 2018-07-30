@@ -51,6 +51,7 @@ type Control struct {
 
 	EnableKeys bool
 	EnableZoom bool
+	EnableFps  bool
 
 	enabled    bool
 	rotating   bool
@@ -121,6 +122,7 @@ func (c *Control) Init(followee Followee, persp *camera.Perspective, iWindow win
 
 	c.EnableKeys = true
 	c.EnableZoom = true
+	c.EnableFps = true
 
 	c.enabled = true
 	c.rotating = false
@@ -227,6 +229,9 @@ func (c *Control) ZoomBySteps(step1P, step3P int) {
 		case new < -0x71:
 			new = -0x71
 		}
+	}
+	if !c.EnableFps && new >= 0 {
+		new = -1
 	}
 	zoom := int8(new)
 	c.Zoom = zoom
