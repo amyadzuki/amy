@@ -432,4 +432,4 @@ func (c *Control) updateZoomAbsolute() {
 	}
 }
 
-var K float64 = 1
+var FrontBy float64 = 3.5
