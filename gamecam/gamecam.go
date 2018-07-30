@@ -256,6 +256,7 @@ func (c *Control) initPositionAndTarget1P() {
 	dx, dy := c.Followee.FacingNormalized()
 	y -= dy * c.Followee.FrontOfEye()
 	z += c.Followee.HeightToEye()
+	vec.Y = float32(y)
 	vec.Z = float32(z)
 	c.camera.SetPositionVec(&vec)
 	vec.X, vec.Y = float32(x+dx), float32(y+dy)
