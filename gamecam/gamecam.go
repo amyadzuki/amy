@@ -432,5 +432,5 @@ func (c *Control) updateZoomAbsolute() {
 	}
 }
 
-var FrontByConstant float64 = 0.1
+var FrontByConstant float64 = 0.1 // 0.101250
 var FrontByEye float64 = 1
