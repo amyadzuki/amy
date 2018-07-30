@@ -19,11 +19,13 @@ func init() {
 	AmyDark.Button.Focus.BgColor = math32.Color4{0.25, 0.125, 0.375, 0.5}
 	AmyDark.Button.Pressed.BgColor = math32.Color4{0.25, 0.125, 0.375, 1}
 	AmyDark.Button.Disabled.BgColor = math32.Color4{0, 0, 0, 0}
-	AmyDark.Window.Normal.TitleBgColor = math32.Color4{0.1294117647, 0.58823529411, 0.95294117647, 0.25}
-	AmyDark.Window.Over.TitleBgColor = AmyDark.Window.Normal.TitleBgColor
-	AmyDark.Window.Over.TitleBgColor.A = 1
-	AmyDark.Window.Focus.TitleBgColor = AmyDark.Window.Normal.TitleBgColor
-	AmyDark.Window.Disabled.TitleBgColor = AmyDark.Window.Normal.TitleBgColor
+
+	AmyDark.Window.Normal.TitleStyle.BgColor = math32.Color4{0.1294117647, 0.58823529411, 0.95294117647, 0.25}
+	AmyDark.Window.Over.TitleStyle.BgColor = AmyDark.Window.Normal.TitleStyle.BgColor
+	AmyDark.Window.Over.TitleStyle.BgColor.A = 1
+	AmyDark.Window.Focus.TitleStyle.BgColor = AmyDark.Window.Normal.TitleStyle.BgColor
+	AmyDark.Window.Disabled.TitleStyle.BgColor = AmyDark.Window.Normal.TitleStyle.BgColor
+
 	// 0x21/255 0x96/255 0xF3/255
 	// 0.1294117647, 0.58823529411, 0.95294117647
 	AmyDarkWindowContent = math32.Color4{0, 0, 0, 0.25}
