@@ -250,6 +250,33 @@ func (c *Control) ZoomOut(amount float64) {
 	c.ZoomIn(-amount)
 }
 
+func (c *Control) initPositionAndTarget1P() {
+	vec := c.Followee.Position()
+	x, y, z := float64(vec.X), float64(vec.Y), float64(vec.Z)
+	z += c.Followee.HeightToEye()
+	vec.Z = float32(z)
+	c.camera.SetPositionVec(&vec)
+	dx, dy := c.Followee.FacingNormalized()
+	vec.X, vec.Y = float32(x+dx), float32(y+dy)
+	c.camera.LookAt(&vec)
+	c.updateZoomAbsolute()
+}
+
+func (c *Control) initPositionAndTarget3P() {
+	target := c.Followee.Position()
+	x, y, z := float64(target.X), float64(target.Y), float64(target.Z)
+	z += 0.70260 * c.Followee.HeightToEye()
+	target.Z = float32(z)
+	var vec math32.Vector3
+	dx, dy := c.Followee.FacingNormalized()
+	vec.X, vec.Y = float32(x-dx), float32(y-dy)
+	vec.Z = float32(z * math.Phi)
+	c.camera.SetPositionVec(&vec)
+	c.camera.LookAt(&target)
+	c.persp.SetFov(65)
+	c.updateZoomAbsolute()
+}
+
 func (c *Control) onKeyboardKey(evname string, event interface{}) {
 	if !c.Enabled() || !c.EnableKeys {
 		return
@@ -325,33 +352,6 @@ func (c *Control) onMouseScroll(evname string, event interface{}) {
 	}
 	ev := event.(*window.ScrollEvent)
 	c.ZoomIn(float64(ev.Yoffset))
-}
-
-func (c *Control) initPositionAndTarget1P() {
-	vec := c.Followee.Position()
-	x, y, z := float64(vec.X), float64(vec.Y), float64(vec.Z)
-	z += c.Followee.HeightToEye()
-	vec.Z = float32(z)
-	c.camera.SetPositionVec(&vec)
-	dx, dy := c.Followee.FacingNormalized()
-	vec.X, vec.Y = float32(x+dx), float32(y+dy)
-	c.camera.LookAt(&vec)
-	c.updateZoomAbsolute()
-}
-
-func (c *Control) initPositionAndTarget3P() {
-	target := c.Followee.Position()
-	x, y, z := float64(target.X), float64(target.Y), float64(target.Z)
-	z += 0.70260 * c.Followee.HeightToEye()
-	target.Z = float32(z)
-	var vec math32.Vector3
-	dx, dy := c.Followee.FacingNormalized()
-	vec.X, vec.Y = float32(x-dx), float32(y-dy)
-	vec.Z = float32(z * math.Phi)
-	c.camera.SetPositionVec(&vec)
-	c.camera.LookAt(&target)
-	c.persp.SetFov(65)
-	c.updateZoomAbsolute()
 }
 
 const updateRotateEpsilon float64 = 0.01
