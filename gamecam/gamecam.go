@@ -254,7 +254,7 @@ func (c *Control) initPositionAndTarget1P() {
 	vec := c.Followee.Position()
 	x, y, z := float64(vec.X), float64(vec.Y), float64(vec.Z)
 	dx, dy := c.Followee.FacingNormalized()
-	y -= FrontByEye * dy * c.Followee.FrontOfEye() + FrontByConstant
+	y -= FrontByEye * dy * c.Followee.FrontOfEye() - FrontByConstant
 	z += c.Followee.HeightToEye()
 	vec.Y = float32(y)
 	vec.Z = float32(z)
@@ -432,5 +432,5 @@ func (c *Control) updateZoomAbsolute() {
 	}
 }
 
-var FrontByConstant float64 = 0
-var FrontByEye float64 = 3.5
+var FrontByConstant float64 = 0.1
+var FrontByEye float64 = 1
