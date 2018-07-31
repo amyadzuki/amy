@@ -420,7 +420,7 @@ func (c *Control) updateZoomAbsolute() {
 	zoom := c.Zoom
 	if zoom < 0 {
 		// Lock the target and change the position
-		power := float64(-(zoom + 1)) * updateZoomAbsoluteScalar3P - 2
+		power := float64(-(zoom + 1)) * updateZoomAbsoluteScalar3P - 1
 		distance := math.Pow(math.Phi, power)
 		position := c.camera.Position()
 		target := c.camera.Target()
