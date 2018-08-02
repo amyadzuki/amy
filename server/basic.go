@@ -14,7 +14,7 @@ type Basic struct {
 	ImplApi   func(Backend, uint32, ...interface{})
 	ImplHttp  func(Backend, ...interface{})
 	ImplHttps func(Backend, ...interface{})
-	ImplServe func(Backend, string, string, string, string, onfail.OnFail)
+	ImplServe func(Backend, string, string, string, string, ...onfail.OnFail)
 }
 
 func (server *Basic) Api(backend Backend, version uint32, args ...interface{}) {
@@ -41,11 +41,11 @@ func (server *Basic) Https(backend Backend, args ...interface{}) {
 	}
 }
 
-func (server *Basic) Serve(backend Backend, httpAddr, httpsAddr, certPath, keyPath string, onFail onfail.OnFail) {
+func (server *Basic) Serve(backend Backend, httpAddr, httpsAddr, certPath, keyPath string, onFail ...onfail.OnFail) {
 	if server.ImplServe != nil {
-		server.ImplServe(backend, httpAddr, httpsAddr, certPath, keyPath, onFail)
+		server.ImplServe(backend, httpAddr, httpsAddr, certPath, keyPath, onFail...)
 	} else {
-		basicServe(server, backend, httpAddr, httpsAddr, certPath, keyPath, onFail)
+		basicServe(server, backend, httpAddr, httpsAddr, certPath, keyPath, onFail...)
 	}
 }
 
@@ -115,14 +115,14 @@ func basicHttpx(server Server, backend Backend, secure bool, args ...interface{}
 
 }
 
-func basicServe(server Server, backend Backend, httpAddr, httpsAddr, certPath, keyPath string, onFail onfail.OnFail) {
+func basicServe(server Server, backend Backend, httpAddr, httpsAddr, certPath, keyPath string, onFail ...onfail.OnFail) {
 	go func() {
 		err := backend.Http(httpAddr, server.Http)
-		onFail.Fail(errors.Wrap(err, "HTTP"))
+		onfail.FailEx(err, "HTTP", nil, onfail.FatalTrace, onFail...)
 	}()
 	go func() {
 		err := backend.Https(httpsAddr, certPath, keyPath, server.Https)
-		onFail.Fail(errors.Wrap(err, "HTTPS"))
+		onfail.FailEx(err, "HTTPS", nil, onfail.FatalTrace, onFail...)
 	}()
 	return
 }
