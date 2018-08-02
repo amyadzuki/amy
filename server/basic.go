@@ -6,8 +6,6 @@ import (
 
 	"github.com/amyadzuki/amygolib/onfail"
 	"github.com/amyadzuki/amygolib/str"
-
-	"github.com/pkg/errors"
 )
 
 type Basic struct {
