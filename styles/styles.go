@@ -11,6 +11,7 @@ var AmyDarkClosingButton gui.ButtonStyles
 var AmyDarkHelpButton gui.ButtonStyles
 var AmyDarkHelpingButton gui.ButtonStyles
 var AmyDarkWindowContent math32.Color4
+var InvisibleButton gui.ButtonStyles
 
 func init() {
 	AmyDark = *gui.StyleDefault()
@@ -42,4 +43,20 @@ func init() {
 
 	AmyDarkHelpButton = AmyDark.Button
 	AmyDarkHelpingButton = AmyDarkHelpButton
+
+	InvisibleButton.Normal.BorderColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Over.BorderColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Focus.BorderColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Pressed.BorderColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Disabled.BorderColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Normal.BgColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Over.BgColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Focus.BgColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Pressed.BgColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Disabled.BgColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Normal.FgColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Over.FgColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Focus.FgColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Pressed.FgColor = math32.Color4{0, 0, 0, 0}
+	InvisibleButton.Disabled.FgColor = math32.Color4{0, 0, 0, 0}
 }
