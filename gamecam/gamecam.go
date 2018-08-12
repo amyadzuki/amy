@@ -260,8 +260,8 @@ func (c *Control) initPositionAndTarget1P() {
 	vec := c.Followee.Position()
 	x, y, z := float64(vec.X), float64(vec.Y), float64(vec.Z)
 	dx, dy := c.Followee.FacingNormalized()
-	y -= FrontByEye * dy * c.Followee.FrontOfEye() - FrontByConstant
-	z += c.Followee.HeightToEye()
+	y -= FrontByEye * dy * c.Followee.YAtEye() - FrontByConstant
+	z += c.Followee.ZAtEye()
 	vec.Y = float32(y)
 	vec.Z = float32(z)
 	c.camera.SetPositionVec(&vec)
@@ -273,7 +273,7 @@ func (c *Control) initPositionAndTarget1P() {
 func (c *Control) initPositionAndTarget3P() {
 	target := c.Followee.Position()
 	x, y, z := float64(target.X), float64(target.Y), float64(target.Z)
-	z += 0.5 * c.Followee.HeightToCap() // 0.70260 * c.Followee.HeightToEye()
+	z += 0.5 * c.Followee.ZAtCap()
 	target.Z = float32(z)
 	var vec math32.Vector3
 	dx, dy := c.Followee.FacingNormalized()
